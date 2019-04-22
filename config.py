@@ -3,6 +3,7 @@ BATCH_SIZE = 64
 EVAL_DURATION = 1
 NETWORK = "resnet18-v1"
 MODE = "esync"
+SPLIT_BY_CLASS = False
 
 # for optimizer
 LEARNING_RATE = 1e-3

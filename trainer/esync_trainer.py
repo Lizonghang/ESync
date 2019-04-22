@@ -16,6 +16,7 @@ def trainer(kwargs):
     common_url = kwargs["common_url"]
     net = kwargs["net"]
     loss = kwargs["loss"]
+    split_by_class = kwargs["split_by_class"]
 
     nd.waitall()
     ts = time.time()
@@ -42,7 +43,7 @@ def trainer(kwargs):
     if rank == 0:
         requests.post(common_url % "init", data={"num_workers": num_workers, "epsilon": 0.5})
 
-    train_iter, test_iter = load_data(batch_size, num_workers, rank, split_by_class=False, resize=shape[-2:])
+    train_iter, test_iter = load_data(batch_size, num_workers, rank, split_by_class=split_by_class, resize=shape[-2:])
 
     trainer = mx.gluon.Trainer(net.collect_params(), "sgd", {"learning_rate": local_lr})
 

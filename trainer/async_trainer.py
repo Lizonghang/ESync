@@ -12,6 +12,7 @@ def trainer(kwargs):
     shape = kwargs["shape"]
     net = kwargs["net"]
     loss = kwargs["loss"]
+    split_by_class = kwargs["split_by_class"]
 
     kvstore_dist = kv.create("dist_async")
     optimizer = mx.optimizer.SGD(learning_rate=lr)
@@ -34,7 +35,7 @@ def trainer(kwargs):
         kvstore_dist.init(idx, param.data())
         kvstore_dist.pull(idx, param.data(), priority=-idx)
 
-    train_iter, test_iter = load_data(batch_size, num_workers, rank, split_by_class=False, resize=shape[-2:])
+    train_iter, test_iter = load_data(batch_size, num_workers, rank, split_by_class=split_by_class, resize=shape[-2:])
 
     if ctx == mx.cpu():
         subdir = "cpu"
