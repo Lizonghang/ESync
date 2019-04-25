@@ -75,8 +75,9 @@ def load_summary(summary_path, summary_name):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("-b", "--base-dir", type=str, default="/Users/mac/Desktop/ESync/logs/resnet18-v1/")
-    parser.add_argument("-n", "--name", type=str, default="esync")
+    parser.add_argument("-b", "--base-dir", type=str, default="/Users/mac/Desktop/ESync/logs/")
+    parser.add_argument("-n", "--network", type=str, default="resnet18-v1")
+    parser.add_argument("-m", "--mode", type=str, default="esync")
     args, unknown = parser.parse_known_args()
 
     summary_name_dict = {
@@ -88,8 +89,8 @@ if __name__ == "__main__":
         "async-niid": "Async-Non-IID.json"
     }
 
-    base_dir = os.path.join(args.base_dir, args.name)
-    summary_name = summary_name_dict[args.name]
+    base_dir = os.path.join(args.base_dir, args.network, args.mode)
+    summary_name = summary_name_dict[args.mode]
 
     merged = {}
     workers = {"cloud1": ["cpu", "gpu0", "gpu1"], "cloud3": ["cpu", "gpu0", "gpu1"]}

@@ -223,10 +223,11 @@ def draw_computation_communication_ratio(esync_summary, sync_summary, async_summ
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("-b", "--base-dir", type=str, default="/Users/mac/Desktop/ESync/logs/resnet18-v1/")
+    parser.add_argument("-b", "--base-dir", type=str, default="/Users/mac/Desktop/ESync/logs/")
+    parser.add_argument("-n", "--network", type=str, default="resnet18-v1")
     args, unknown = parser.parse_known_args()
 
-    base_dir = args.base_dir
+    base_dir = os.path.join(args.base_dir, args.network)
     summary_name_dict = {
         "esync": "ESync.json",
         "esync-niid": "ESync-Non-IID.json",
@@ -243,20 +244,20 @@ if __name__ == "__main__":
     sync_summary = load_summary(os.path.join(base_dir, "sync"), summary_name_dict["sync"])
     async_summary = load_summary(os.path.join(base_dir, "async"), summary_name_dict["async"])
 
-    config = [("cloud3", "gpu1"), ("cloud3", "gpu1"), ("cloud3", "gpu0"), True]
+    config = [("cloud3", "gpu0"), ("cloud3", "gpu1"), ("cloud3", "gpu0"), True]
     draw_accuracy(esync_summary, sync_summary, async_summary, config,
-                  vline=0.911, fignum=0, down_sample_interval=5, smooth_interval=10, shift=7)
-    # draw_data_throughput(esync_summary, sync_summary, async_summary, fignum=1)
-    # draw_traffic_load(esync_summary, sync_summary, async_summary, config, fignum=2)
-    # draw_computation_communication_ratio(esync_summary, sync_summary, async_summary, fignum=3)
+                  vline=0.926, fignum=0, down_sample_interval=5, smooth_interval=10, shift=0, timespan=120)
+    draw_data_throughput(esync_summary, sync_summary, async_summary, fignum=1)
+    draw_traffic_load(esync_summary, sync_summary, async_summary, config, fignum=2)
+    draw_computation_communication_ratio(esync_summary, sync_summary, async_summary, fignum=3)
 
     # Non I.I.D.
-    # esync_niid_summary = load_summary(os.path.join(base_dir, "esync-niid"), summary_name_dict["esync-niid"])
-    # sync_niid_summary = load_summary(os.path.join(base_dir, "sync-niid"), summary_name_dict["sync-niid"])
-    # async_niid_summary = load_summary(os.path.join(base_dir, "async-niid"), summary_name_dict["async-niid"])
+    esync_niid_summary = load_summary(os.path.join(base_dir, "esync-niid"), summary_name_dict["esync-niid"])
+    sync_niid_summary = load_summary(os.path.join(base_dir, "sync-niid"), summary_name_dict["sync-niid"])
+    async_niid_summary = load_summary(os.path.join(base_dir, "async-niid"), summary_name_dict["async-niid"])
 
-    # config = [("cloud3", "gpu1"), ("cloud3", "gpu0"), ("cloud3", "gpu1"), False]
-    # draw_accuracy(esync_niid_summary, sync_niid_summary, async_niid_summary, config,
-    #               vline=0.911, fignum=4, down_sample_interval=10, smooth_interval=30, shift=7)
+    config = [("cloud3", "gpu1"), ("cloud3", "gpu0"), ("cloud3", "gpu1"), False]
+    draw_accuracy(esync_niid_summary, sync_niid_summary, async_niid_summary, config,
+                  vline=0.926, fignum=4, down_sample_interval=10, smooth_interval=30, shift=7)
 
     plt.show()

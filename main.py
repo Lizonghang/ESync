@@ -6,31 +6,11 @@ from mxnet.gluon import loss as gloss
 
 
 if __name__ == "__main__":
-    """Standalone
-    python ~/ESync/main.py -g 0 -m local -n resnet50-v1
-    """
+    """COMMAND
+    [Standalone]
+    python ~/ESync/main.py -g 0 -m local -n resnet18-v1 -e 1000
 
-    """Online
-    DMLC_ROLE=scheduler DMLC_PS_ROOT_URI=10.1.1.34 DMLC_PS_ROOT_PORT=9091 DMLC_NUM_SERVER=1 DMLC_NUM_WORKER=6 \
-        PS_VERBOSE=1 DMLC_INTERFACE=eno2\
-        python ~/ESync/main.py -c 1 -m esync &
-
-    DMLC_ROLE=server DMLC_PS_ROOT_URI=10.1.1.34 DMLC_PS_ROOT_PORT=9091 DMLC_NUM_SERVER=1 DMLC_NUM_WORKER=6 \
-        PS_VERBOSE=1 DMLC_INTERFACE=eno2\
-        python ~/ESync/main.py -c 1 -m esync &
-
-    DMLC_ROLE=worker DMLC_PS_ROOT_URI=10.1.1.34 DMLC_PS_ROOT_PORT=9091 DMLC_NUM_SERVER=1 DMLC_NUM_WORKER=6 \
-        PS_VERBOSE=1 DMLC_INTERFACE=eno2 \
-        python ~/ESync/main.py -g 0 -m esync -n resnet50-v1 &
-    DMLC_ROLE=worker DMLC_PS_ROOT_URI=10.1.1.34 DMLC_PS_ROOT_PORT=9091 DMLC_NUM_SERVER=1 DMLC_NUM_WORKER=6 \
-        PS_VERBOSE=1 DMLC_INTERFACE=eno2 \
-        python ~/ESync/main.py -g 1 -m esync -n resnet50-v1 &
-    DMLC_ROLE=worker DMLC_PS_ROOT_URI=10.1.1.34 DMLC_PS_ROOT_PORT=9091 DMLC_NUM_SERVER=1 DMLC_NUM_WORKER=6 \
-        PS_VERBOSE=1 DMLC_INTERFACE=eno2 \
-        python ~/ESync/main.py -c 1 -m esync -n resnet50-v1 &
-    """
-
-    """Backend
+    [Distributed]
     DMLC_ROLE=scheduler DMLC_PS_ROOT_URI=10.1.1.34 DMLC_PS_ROOT_PORT=9091 DMLC_NUM_SERVER=1 DMLC_NUM_WORKER=6 \
         PS_VERBOSE=1 DMLC_INTERFACE=eno2\
         nohup python ~/ESync/main.py -c 1 -m esync > scheduler.log &
@@ -41,13 +21,13 @@ if __name__ == "__main__":
 
     DMLC_ROLE=worker DMLC_PS_ROOT_URI=10.1.1.34 DMLC_PS_ROOT_PORT=9091 DMLC_NUM_SERVER=1 DMLC_NUM_WORKER=6 \
         PS_VERBOSE=1 DMLC_INTERFACE=eno2\
-        nohup python ~/ESync/main.py -g 0 -m esync -n resnet50-v1 > worker_gpu_0.log &
+        nohup python ~/ESync/main.py -g 0 -m esync -n resnet18-v1 > worker_gpu_0.log &
     DMLC_ROLE=worker DMLC_PS_ROOT_URI=10.1.1.34 DMLC_PS_ROOT_PORT=9091 DMLC_NUM_SERVER=1 DMLC_NUM_WORKER=6 \
         PS_VERBOSE=1 DMLC_INTERFACE=eno2\
-        nohup python ~/ESync/main.py -g 1 -m esync -n resnet50-v1 > worker_gpu_1.log &
+        nohup python ~/ESync/main.py -g 1 -m esync -n resnet18-v1 > worker_gpu_1.log &
     DMLC_ROLE=worker DMLC_PS_ROOT_URI=10.1.1.34 DMLC_PS_ROOT_PORT=9091 DMLC_NUM_SERVER=1 DMLC_NUM_WORKER=6 \
         PS_VERBOSE=1 DMLC_INTERFACE=eno2\
-        nohup python ~/ESync/main.py -c 1 -m esync -n resnet50-v1 > worker_cpu.log &
+        nohup python ~/ESync/main.py -c 1 -m esync -n resnet18-v1 > worker_cpu.log &
     """
 
     parser = argparse.ArgumentParser()
@@ -93,9 +73,6 @@ if __name__ == "__main__":
         from symbols.alexnet import alexnet
         net = alexnet(classes=10)
         shape = (batch_size, 1, 224, 224)
-    elif network == "squeezenet":
-        from symbols.squeezenet import squeezenet1_1
-        net = squeezenet1_1(classes=10)
     elif network == "mobilenet-v1":
         from symbols.mobilenet import mobilenet1_0
         net = mobilenet1_0(classes=10)

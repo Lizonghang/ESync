@@ -1,5 +1,5 @@
 import mxnet as mx
-from mxnet import autograd
+from mxnet import autograd, nd
 from utils import load_data, get_batch, eval_acc
 
 
@@ -25,6 +25,7 @@ def trainer(kwargs):
             for l in ls:
                 l.backward()
             trainer.step(1)
+            nd.waitall()
             iters += 1
             if iters % eval_duration == 0:
                 test_acc = eval_acc(test_iter, net, ctx)
