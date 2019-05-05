@@ -91,7 +91,7 @@ def eval_acc(test_iter, net, ctx):
 
 
 class Measure:
-    def __init__(self, log_path):
+    def __init__(self, log_dir, sub_dir):
         self.num_iters = -1
         self.self_iter = -1
         self.begin = time.time()
@@ -100,10 +100,12 @@ class Measure:
         self.time_map = {}
         self.accuracy = 0.
         self.num_sampels = 0
-        self.log_path = log_path
-        if os.path.exists(log_path):
-            shutil.rmtree(log_path)
-        os.mkdir(log_path)
+        self.log_path = os.path.join(log_dir, sub_dir)
+        if not os.path.exists(log_dir):
+            os.mkdir(log_dir)
+        if os.path.exists(self.log_path):
+            shutil.rmtree(self.log_path)
+        os.mkdir(self.log_path)
 
     def set_num_iters(self, num_iters):
         assert num_iters >= 0

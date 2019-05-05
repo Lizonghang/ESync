@@ -10,6 +10,7 @@ def trainer(kwargs):
     local_lr = kwargs["local_lr"]
     global_lr = kwargs["global_lr"]
     batch_size = kwargs["batch_size"]
+    log_dir = kwargs["log_dir"]
     eval_duration = kwargs["eval_duration"]
     ctx = kwargs["ctx"]
     shape = kwargs["shape"]
@@ -69,8 +70,7 @@ def trainer(kwargs):
         print("[ERROR] This gpu is not supported.")
         return
 
-    log_path = os.path.join('/', 'home', 'lizh', 'ESync', 'logs', subdir)
-    measure = Measure(log_path)
+    measure = Measure(log_dir, subdir)
     measure.set_num_iters(global_iters)
 
     print("Training on", ctx)

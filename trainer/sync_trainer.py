@@ -7,6 +7,7 @@ from utils import load_data, get_batch, eval_acc, Measure
 def trainer(kwargs):
     lr = kwargs["lr"]
     batch_size = kwargs["batch_size"]
+    log_dir = kwargs["log_dir"]
     eval_duration = kwargs["eval_duration"]
     ctx = kwargs["ctx"]
     shape = kwargs["shape"]
@@ -42,8 +43,7 @@ def trainer(kwargs):
         return
 
     global_iters = 1
-    log_path = os.path.join('/', 'home', 'lizh', 'ESync', 'logs', subdir)
-    measure = Measure(log_path)
+    measure = Measure(log_dir, subdir)
     measure.set_num_iters(global_iters)
 
     print("Training on", ctx)

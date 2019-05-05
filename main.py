@@ -38,6 +38,7 @@ if __name__ == "__main__":
     parser.add_argument("-g", "--gpu", type=int, default=DEFAULT_GPU_ID)
     parser.add_argument("-c", "--cpu", type=bool, default=USE_CPU)
     parser.add_argument("-n", "--network", type=str, default=NETWORK)
+    parser.add_argument("-d", "--log-dir", type=str, default=LOG_DIR)
     parser.add_argument("-e", "--eval-duration", type=int, default=EVAL_DURATION)
     parser.add_argument("-m", "--mode", type=str, default=MODE)
     parser.add_argument("-s", "--split-by-class", type=bool, default=SPLIT_BY_CLASS)
@@ -51,6 +52,7 @@ if __name__ == "__main__":
     batch_size = args.batch_size
     network = args.network
     eval_duration = args.eval_duration
+    log_dir = args.log_dir
     ctx = mx.cpu() if args.cpu else mx.gpu(args.gpu)
     mode = args.mode
     shape = (batch_size, 1, 28, 28)
@@ -91,6 +93,7 @@ if __name__ == "__main__":
     kwargs = {
         "lr": lr,
         "batch_size": batch_size,
+        "log_dir": log_dir,
         "eval_duration": eval_duration,
         "ctx": ctx,
         "shape": shape,
