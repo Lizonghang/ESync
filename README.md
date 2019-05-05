@@ -20,7 +20,7 @@ ESync is an efficient synchronous parallel algorithm designed for distributed ma
 
 > Note: MXNet should be compiled with the build flag **USE\_DIST\_KVSTORE=1** to support distributed training. See [Distributed Training in MXNet](https://mxnet.incubator.apache.org/versions/master/faq/distributed_training.html) for more details.
 
-## Hyper-Parameters
+## Hyper Parameters
 
 Parameter Name | flag | type | Default Value |  Description 
 :-:|:-:|:-:|:-:|:--
@@ -35,7 +35,7 @@ Parameter Name | flag | type | Default Value |  Description
 **log\_dir** | -ld | string | /home/lizh/ESync/logs | Path to save the logs. The folder named *logs* will be created automatically at the specified path, and it will be emptied during initialization. The Measure module will create subfolders "{device\_name}{device\_id}" and save log files "iter-{iter\_num}.txt" in these subfolders.
 **eval\_duration** | -e | int | 1 | Interval for model evaluation, default to evaluating the model in each communication round. We recommend evaluating the model on devices with strong computing capability.
 **mode** | -m | string | *esync* | Support [*esync*, *sync*, *async*, *local*]. Set **mode** to *local* to train the model on single device.
-**split\_by\_class** | -s | bool | *False* | Default to allocating datasets using the uniform random sampling. Set **split\_by\_class** to *True* to allocate specific classes of samples to each device, for example, allocate samples with labels 0~4 to device 0 and samples with labels 5~9 to device 1.
+**split\_by\_class** | -s | bool | *False* | Default to allocating datasets using the uniform random sampling. Set **split\_by\_class** to *True* to allocate specific classes of samples to each device, for example, allocate samples with labels 0\~4 to device 0 and samples with labels 5\~9 to device 1.
 **state\_server\_ip** | -ip | string | 10.1.1.34 | The IP of State Server.
 **state\_server\_port** | -port | string | 10010 | The port of State Server.
 
