@@ -23,7 +23,7 @@ ESync is an efficient synchronous parallel algorithm designed for distributed ma
 ## Hyper-Parameters
 
 Parameter Name | flag | type | Default Value |  Description 
-:-:|:-:|:-:|:-:|:-:
+:-:|:-:|:-:|:-:|:--
 **learning\_rate** | -l | float | 0.001 |  Set **learning\_rate** when **mode** is sync, async or local. This parameter is used in the optimizer (e.g. SSGD, ASGD) to scale the gradient.
 **local\_lr** | -ll | float | 0.001 | 
 **global\_lr** | -gl | float | 1.0 |
