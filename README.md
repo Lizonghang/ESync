@@ -30,7 +30,7 @@ Parameter Name | flag | type | Default Value |  Description
 **batch\_size** | -b | int | 64 | The number of samples processed in an iteration on each device.
 **gpu** | -g | int | 0 | The ID of GPU used for training. We default to using only one GPU for each process in the current version, i.e. only one integer is allowed.
 **cpu** | -c | bool | *False* | Default to training on GPU 0 (set by the option **gpu**), set **cpu** to *True* to support training on CPUs.
-**network** | -n | string | *resnet18-v1* |
+**network** | -n | string | *resnet18-v1* | The network used to evaluate the performance of *esync*, *sync* and *async*. We support [*alexnet*, *resnet18-v1*, *resnet50-v1*, *resnet50-v2*, *mobilenet-v1*, *mobilenet-v2*, *inception-v3*] in the current version.
 **eval\_duration** | -e | int | 1 |
 **mode** | -m | string | *esync* | 
 **split\_by\_class** | -s | bool | *False* |  
