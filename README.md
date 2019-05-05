@@ -24,7 +24,7 @@ ESync is an efficient synchronous parallel algorithm designed for distributed ma
 
 Parameter Name | flag | type | Default Value |  Description 
 :-:|:-:|:-:|:-:|:-:
-**learning\_rate** | -l | float | 0.001 |  Set **learning\_rate** when **mode** is sync, async or local.
+**learning\_rate** | -l | float | 0.001 |  Set **learning\_rate** when **mode** is sync, async or local. This parameter is used in the optimizer (e.g. SSGD, ASGD) to scale the gradient.
 **local\_lr** | -ll | float | 0.001 | 
 **global\_lr** | -gl | float | 1.0 |
 **batch\_size** | -b | int | 64 | 
@@ -37,7 +37,7 @@ Parameter Name | flag | type | Default Value |  Description
 **state\_server\_ip** | -ip | string | 10.1.1.34 |
 **state\_server\_port** | -port | string | 10010 |
 
-> Note: The default values can be modified through *config.py*.
+> Note: The default values can be modified through [config.py](https://github.com/Lizonghang/ESync/blob/master/config.py).
 
 # References
 
