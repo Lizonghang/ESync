@@ -43,6 +43,20 @@ Parameter Name | flag | type | Default Value |  Description
 
 > Note: DO NOT run multiple processes that use the same device on each server, otherwise the log files will be overwritten.
 
+## Start Training
+
+### Training on a single device
+
+```
+python main.py -m local -n resnet18-v1 -g 0 -e 100
+```
+
+In the above command, we train the *resnet18-v1* model on a single device (GPU 0) and evaluate the model every 100 iterations. This mode only prints test accuracy at the terminal without recording log files.
+
+### Distributed Training
+
+Suppose we have two servers (IP: 10.1.1.29 and 10.1.1.33), and each with two GPUs. We take GPU 0, GPU 1 and CPU of these servers as separate workers, and obtain a small-scale heterogeneous cluster with 6 workers. In addition, we take an extra device (IP: 10.1.1.34) to take the role of Parameter Server, Scheduler and State Server.
+
 # References
 
 [1] [Chen, Jianmin, et al. "Revisiting distributed synchronous SGD." arXiv preprint arXiv:1604.00981 (2016).](https://arxiv.org/pdf/1604.00981.pdf)
