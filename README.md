@@ -18,24 +18,26 @@ ESync is an efficient synchronous parallel algorithm designed for distributed ma
 * argparse == 1.4.0
 * matplotlib == 3.0.3
 
-> Note that we need to compile MXNet with the build flag **USE\_DIST\_KVSTORE=1** to support distributed training. See [Distributed Training in MXNet](https://mxnet.incubator.apache.org/versions/master/faq/distributed_training.html) for more details.
+> Note: MXNet should be compiled with the build flag **USE\_DIST\_KVSTORE=1** to support distributed training. See [Distributed Training in MXNet](https://mxnet.incubator.apache.org/versions/master/faq/distributed_training.html) for more details.
 
 ## Hyper-Parameters
 
 Parameter Name | flag | type | Default Value |  Description 
 :-:|:-:|:-:|:-:|:-:
-learning\_rate | -l | float | 0.001 | 
-local\_lr | -ll | float | 0.001 | 
-global\_lr | -gl | float | 1.0 |
-batch\_size | -b | int | 64 | 
-gpu | -g | int | 0 |
-cpu | -c | bool | False |
-network | -n | string | resnet18-v1 |
-eval\_duration | -e | int | 1 |
-mode | -m | string | esync | 
-split\_by\_class | -s | bool | False |  
-state\_server\_ip | -ip | string | 10.1.1.34 |
-state\_server\_port | -port | string | 10010 |
+**learning\_rate** | -l | float | 0.001 |  Set **learning\_rate** when **mode** is sync, async or local.
+**local\_lr** | -ll | float | 0.001 | 
+**global\_lr** | -gl | float | 1.0 |
+**batch\_size** | -b | int | 64 | 
+**gpu** | -g | int | 0 |
+**cpu** | -c | bool | False |
+**network** | -n | string | resnet18-v1 |
+**eval\_duration** | -e | int | 1 |
+**mode** | -m | string | esync | 
+**split\_by\_class** | -s | bool | False |  
+**state\_server\_ip** | -ip | string | 10.1.1.34 |
+**state\_server\_port** | -port | string | 10010 |
+
+> Note: The default values can be modified through *config.py*.
 
 # References
 
