@@ -55,7 +55,28 @@ In the above command, we train the *resnet18-v1* model on a single device (GPU 0
 
 ### Distributed Training
 
-Suppose we have two servers (IP: 10.1.1.29 and 10.1.1.33), and each with two GPUs. We take GPU 0, GPU 1 and CPU of these servers as separate workers, and obtain a small-scale heterogeneous cluster with 6 workers. In addition, we take an extra device (IP: 10.1.1.34) to take the role of Parameter Server, Scheduler and State Server.
+Suppose we have two servers, cloud1 (IP: 10.1.1.29) and cloud3 (IP: 10.1.1.33), and each with two GPUs. We take GPU 0, GPU 1 and CPU of these servers as separate workers, and obtain a small-scale heterogeneous cluster with 6 workers. In addition, we take an extra server cloud2 (IP: 10.1.1.34) to take the role of Parameter Server, Scheduler and State Server.
+
+**Step 1: Start the State Server** 
+
+> Note: This step can be ignored if **mode** is not *esync*.
+
+The State Server is used in ESync algorithm to assign the number of local iterations for each device automatically. The main idea is that, when the slowest device completes computations, other devices have completed local iterations as many times as possible.
+
+Running the following commands on cloud2 to start the State Server:
+
+```
+> cd path/to/ESync/SimpleStateServer
+> nohup python manage.py runserver 0.0.0.0:10010 > /etc/null &
+```
+
+Then the State Server will listen on port 10010 in the background to wait for the queries from workers.
+
+**Step 2: Start the Schduler**
+
+**Step 3: Start the Server**
+
+**Step 4: Start the Workers**
 
 # References
 
