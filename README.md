@@ -4,9 +4,34 @@ This is a MXNet implementation of the ESync algorithm described in the paper "ES
 
 ESync is an efficient synchronous parallel algorithm designed for distributed machine learning tasks in heterogeneous clusters (the clusters may consist of computing devices with different computing capabilities, e.g. CPU, GPU, TPU, FPGA), which takes both the accuracy of [SSGD](https://arxiv.org/pdf/1604.00981.pdf) and training speed of [ASGD](http://papers.nips.cc/paper/4687-large-scale-distributed-deep-networks.pdf), meanwhile takes full advantage of the computing capabilities of the heterogeneous clusters with lowest traffic load. Besides, ESync allows the aggregation operations to be performed in a synchronous manner in heterogeneous clusters, provides users with flexibility in selecting different efficient collective communication algorithms according to the characteristics of tasks and network (e.g. [Parameter Server](https://www.usenix.org/system/files/conference/osdi14/osdi14-paper-li_mu.pdf), [Ring Allreduce](http://research. baidu.com/bringing-hpc-techniques-deep-learning/), [Butterfly](https://link.springer.com/content/pdf/10.1007%2F978-3-540-24685-5_1.pdf), [Binary Blocks](https://link.springer.com/content/pdf/10.1007%2F978-3-540-24685-5_1.pdf)).
 
-# Overview of the ESync Algorithm
+# Usage
 
-<img src="images/overview.png" align="center"/>
+## Prerequisites
+
+* python == 3.6
+* mxnet == 1.4.0 
+* numpy == 1.16.2
+* argparse == 1.4.0
+* matplotlib == 3.0.3
+
+Note that we need to compile MXNet with the build flag **USE\_DIST\_KVSTORE=1** to support distributed training. See [Distributed Training in MXNet](https://mxnet.incubator.apache.org/versions/master/faq/distributed_training.html) for more details.
+
+## Hyper-Parameters
+
+Parameter Name | flag | type | Default Value |  Description 
+:-:|:-:|:-:|:-:|:-:
+learning\_rate | -l | float | 0.001 | 
+local\_lr | -ll | float | 0.001 | 
+global\_lr | -gl | float | 1.0 |
+batch\_size | -b | int | 64 | 
+gpu | -g | int | 0 |
+cpu | -c | bool | False |
+network | -n | string | resnet18-v1 |
+eval\_duration | -e | int | 1 |
+mode | -m | string | esync | 
+split\_by\_class | -s | bool | False |  
+state\_server\_ip | -ip | string | 10.1.1.34 |
+state\_server\_port | -port | string | 10010 |
 
 # References
 
