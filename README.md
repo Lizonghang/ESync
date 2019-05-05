@@ -29,11 +29,11 @@ Parameter Name | flag | type | Default Value |  Description
 **global\_lr** | -gl | float | 1.0 | Set **global\_lr** when **mode** is *esync*. This parameter is used in the global aggregation operation to scale the aggregated model updates and can be simply set to 1.0.
 **batch\_size** | -b | int | 64 | The number of samples processed in an iteration on each device.
 **gpu** | -g | int | 0 | The ID of GPU used for training. We default to using only one GPU for each process in the current version, i.e. only one integer is allowed.
-**cpu** | -c | bool | False | 
-**network** | -n | string | resnet18-v1 |
+**cpu** | -c | bool | *False* | Default to training on GPU 0 (set by the option **gpu**), set **cpu** to *True* to support training on CPUs.
+**network** | -n | string | *resnet18-v1* |
 **eval\_duration** | -e | int | 1 |
-**mode** | -m | string | esync | 
-**split\_by\_class** | -s | bool | False |  
+**mode** | -m | string | *esync* | 
+**split\_by\_class** | -s | bool | *False* |  
 **state\_server\_ip** | -ip | string | 10.1.1.34 |
 **state\_server\_port** | -port | string | 10010 |
 
