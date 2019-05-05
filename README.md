@@ -27,9 +27,9 @@ Parameter Name | flag | type | Default Value |  Description
 **learning\_rate** | -l | float | 0.001 |  Set **learning\_rate** when **mode** is *sync*, *async* or *local*. This parameter is used in the optimizer (e.g. SSGD, ASGD) to scale the gradient.
 **local\_lr** | -ll | float | 0.001 | Set **local\_lr** when **mode** is *esync*. This parameter is used in the local optimizer (e.g. SGD, Momentum, Adam) to scale the gradient.
 **global\_lr** | -gl | float | 1.0 | Set **global\_lr** when **mode** is *esync*. This parameter is used in the global aggregation operation to scale the aggregated model updates and can be simply set to 1.0.
-**batch\_size** | -b | int | 64 | 
-**gpu** | -g | int | 0 |
-**cpu** | -c | bool | False |
+**batch\_size** | -b | int | 64 | The number of samples processed in an iteration on each device.
+**gpu** | -g | int | 0 | The ID of GPU used for training. We default to using only one GPU for each process in the current version, i.e. only one integer is allowed.
+**cpu** | -c | bool | False | 
 **network** | -n | string | resnet18-v1 |
 **eval\_duration** | -e | int | 1 |
 **mode** | -m | string | esync | 
