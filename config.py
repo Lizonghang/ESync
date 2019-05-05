@@ -3,6 +3,7 @@ BATCH_SIZE = 64
 NETWORK = "resnet18-v1"
 MODE = "esync"
 SPLIT_BY_CLASS = False
+DATA_DIR = "/home/lizh/ESync/data"
 
 # for evaluation
 EVAL_DURATION = 1

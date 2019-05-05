@@ -1,4 +1,3 @@
-import os
 import mxnet as mx
 from mxnet import kv, autograd, nd
 from utils import load_data, get_batch, eval_acc, Measure
@@ -7,6 +6,7 @@ from utils import load_data, get_batch, eval_acc, Measure
 def trainer(kwargs):
     lr = kwargs["lr"]
     batch_size = kwargs["batch_size"]
+    data_dir = kwargs["data_dir"]
     log_dir = kwargs["log_dir"]
     eval_duration = kwargs["eval_duration"]
     ctx = kwargs["ctx"]
@@ -36,7 +36,8 @@ def trainer(kwargs):
         kvstore_dist.init(idx, param.data())
         kvstore_dist.pull(idx, param.data(), priority=-idx)
 
-    train_iter, test_iter = load_data(batch_size, num_workers, rank, split_by_class=split_by_class, resize=shape[-2:])
+    train_iter, test_iter = load_data(batch_size, num_workers, rank,
+                                      split_by_class=split_by_class, resize=shape[-2:], root=data_dir)
 
     if ctx == mx.cpu():
         subdir = "cpu"

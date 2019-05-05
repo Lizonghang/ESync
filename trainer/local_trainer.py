@@ -6,12 +6,13 @@ from utils import load_data, get_batch, eval_acc
 def trainer(kwargs):
     lr = kwargs["lr"]
     batch_size = kwargs["batch_size"]
+    data_dir = kwargs["data_dir"]
     eval_duration = kwargs["eval_duration"]
     ctx = kwargs["ctx"]
     shape = kwargs["shape"]
     net = kwargs["net"]
     loss = kwargs["loss"]
-    train_iter, test_iter = load_data(batch_size, resize=shape[-2:])
+    train_iter, test_iter = load_data(batch_size, resize=shape[-2:], root=data_dir)
     trainer = mx.gluon.Trainer(net.collect_params(), "sgd", {"learning_rate": lr})
     iters = 0
     print("Training on", ctx)

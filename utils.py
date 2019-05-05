@@ -38,8 +38,9 @@ class ClassSplitSampler(gdata.sampler.Sampler):
         return self.part_len
 
 
-def load_data(batch_size, num_workers=1, rank=0, split_by_class=False, resize=None,
-              root=os.path.join("/", "home", "lizh", "ESync", "data", "fashion-mnist")):
+def load_data(batch_size, num_workers=1, rank=0, split_by_class=False, resize=None, root=""):
+    assert os.path.exists(root), "The specified file path does not exist. (%s)" % root
+    root = os.path.join(root, "fashion-mnist")
     root = os.path.expanduser(root)
     train = gdata.vision.FashionMNIST(root=root, train=True)
     test = gdata.vision.FashionMNIST(root=root, train=False)

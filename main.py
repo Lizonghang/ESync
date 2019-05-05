@@ -35,10 +35,11 @@ if __name__ == "__main__":
     parser.add_argument("-ll", "--local-lr", type=float, default=LEARNING_RATE_LOCAL)
     parser.add_argument("-gl", "--global-lr", type=float, default=LEARNING_RATE_GLOBAL)
     parser.add_argument("-b", "--batch-size", type=int, default=BATCH_SIZE)
+    parser.add_argument("-dd", "--data-dir", type=str, default=DATA_DIR)
     parser.add_argument("-g", "--gpu", type=int, default=DEFAULT_GPU_ID)
     parser.add_argument("-c", "--cpu", type=bool, default=USE_CPU)
     parser.add_argument("-n", "--network", type=str, default=NETWORK)
-    parser.add_argument("-d", "--log-dir", type=str, default=LOG_DIR)
+    parser.add_argument("-ld", "--log-dir", type=str, default=LOG_DIR)
     parser.add_argument("-e", "--eval-duration", type=int, default=EVAL_DURATION)
     parser.add_argument("-m", "--mode", type=str, default=MODE)
     parser.add_argument("-s", "--split-by-class", type=bool, default=SPLIT_BY_CLASS)
@@ -50,6 +51,7 @@ if __name__ == "__main__":
     local_lr = args.local_lr
     global_lr = args.global_lr
     batch_size = args.batch_size
+    data_dir = args.data_dir
     network = args.network
     eval_duration = args.eval_duration
     log_dir = args.log_dir
@@ -93,6 +95,7 @@ if __name__ == "__main__":
     kwargs = {
         "lr": lr,
         "batch_size": batch_size,
+        "data_dir": data_dir,
         "log_dir": log_dir,
         "eval_duration": eval_duration,
         "ctx": ctx,
