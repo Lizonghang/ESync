@@ -21,6 +21,9 @@ def interval_averaging(accuracy_list, interval):
 
 def draw_accuracy(esync_summary, sync_summary, async_summary, config, vline=0.9,
                   fignum=0, timespan=120, down_sample_interval=10, smooth_interval=10, shift=0):
+    if not (esync_summary or sync_summary or async_summary):
+        return
+
     plt.figure(fignum)
     iid = config[3]
     title = "Test Accuracy Curve of ESync, Sync, Async on %si.i.d. dataset" % ("" if iid else "non-")
@@ -65,6 +68,9 @@ def draw_accuracy(esync_summary, sync_summary, async_summary, config, vline=0.9,
 
 
 def draw_data_throughput(esync_summary, sync_summary, async_summary, fignum=1):
+    if not (esync_summary or sync_summary or async_summary):
+        return
+
     esync_throughput = 0
     if esync_summary:
         total_samples = 0
@@ -114,7 +120,10 @@ def draw_data_throughput(esync_summary, sync_summary, async_summary, fignum=1):
 
 
 def draw_traffic_load(esync_summary, sync_summary, async_summary, config, fignum=2):
-    # num_parameters: 10.65 Million
+    if not (esync_summary or sync_summary or async_summary):
+        return
+
+    # the number of parameters of ResNet18-v1: 10.65 Million
     model_size = 42.6
 
     esync_load = 0
@@ -163,6 +172,9 @@ def draw_traffic_load(esync_summary, sync_summary, async_summary, config, fignum
 
 
 def draw_computation_communication_ratio(esync_summary, sync_summary, async_summary, fignum=3):
+    if not (esync_summary or sync_summary or async_summary):
+        return
+
     esync_load = {}
     if esync_summary:
         for node in esync_summary.keys():
