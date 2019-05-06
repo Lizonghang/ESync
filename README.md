@@ -79,8 +79,8 @@ Run the following commands on cloud2 to start the Scheduler:
 ```
 > cd path/to/ESync
 > DMLC_ROLE=scheduler DMLC_PS_ROOT_URI=10.1.1.34 DMLC_PS_ROOT_PORT=9091 DMLC_NUM_SERVER=1 \
-DMLC_NUM_WORKER=6 PS_VERBOSE=1 DMLC_INTERFACE=eno2 \
-nohup python main.py -c True -m esync > scheduler.log &
+  DMLC_NUM_WORKER=6 PS_VERBOSE=1 DMLC_INTERFACE=eno2 \
+  nohup python main.py -c True -m esync > scheduler.log &
 ```
 
 We start the Scheduler on cloud2 (IP: 10.1.1.34) and listen on port 9091 to wait for the messages (e.g. register, heartbeat) from workers. We specify the Scheduler to use CPU to avoid errors that no GPU resources available, and specify **mode** to *esync* to run ESync algorithm (Set **mode** to *sync* or *async* to run SSGD or ASGD).
