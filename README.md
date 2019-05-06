@@ -206,7 +206,8 @@ and draw the following figures:
 
 <img src="images/alexnet-accuracy-iid.png" width="400px" /><img src="images/inception-v3-accuracy-iid.png" width="400px" />
 
-&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; **AlexNet** &emsp;&emsp;&emsp;&emsp;&emsp;&emsp; **Inception-v3** 
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; Test Accuracy of AlexNet
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; Test Accuracy of Inception-v3
 
 # References
 
