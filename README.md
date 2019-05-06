@@ -156,7 +156,7 @@ The script [summary.py](https://github.com/Lizonghang/ESync/blob/master/summary.
 
 Run the following commands to visualize the logs:
 
-```
+```python
 python drawer.py -b /path/to/logs -n resnet18-v1
 ```
 
@@ -175,10 +175,7 @@ and draw the following figures:
 
 2\. Test Accuracy Curve of ESync, Sync, Async on non-i.i.d. Fashion-MNIST dataset;
 
-<figure class="half">
-	<img src="images/accuracy-iid.png" width="400px" />
-	<img src="images/accuracy-niid.png" width="400px" />
-</figure>
+<img src="images/accuracy-iid.png" width="400px" /><img src="images/accuracy-niid.png" width="400px" />
 
 3\. Data Throughput of ESync, Sync, Async;
 
