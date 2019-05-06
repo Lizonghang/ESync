@@ -125,6 +125,19 @@ We start workers on GPU 0, GPU 1 and CPU respectively on both cloud1 and cloud3,
 
 To visualize the log data, we should collect the log files on cloud1 and cloud3 manually. Take the ResNet18-v1 model and ESync algorithm as an example, we create a new folder named *resnet18-v1* with a subfolder named *esync*, and rename the log folders as their host names, the structure is as follows:
 
+```
+resnet18-v1
+    |── esync
+          |── cloud1
+                |── cpu
+                |── gpu0
+                |── gpu1
+          |── cloud3
+                |── cpu
+                |── gpu0
+                |── gpu1
+```
+
 # References
 
 [1] [Chen, Jianmin, et al. "Revisiting distributed synchronous SGD." arXiv preprint arXiv:1604.00981 (2016).](https://arxiv.org/pdf/1604.00981.pdf)
