@@ -189,6 +189,8 @@ and draw the following figures:
 
 <img src="images/resnet18-v1-comm-ratio.png" width="800px" />
 
+> Note: We deploy the parameter server on cloud1 in Fig. 5, which reduces the communication delay of devices on cloud1.
+
 > Note: The dotted lines in Fig. 1 and Fig. 2 draw the test accuracy when training on a single device. The test accuracy of standalone training is available in the file *standalone.txt* and should be specified at lines 260 and 272.
 
 > Note: Since only device with rank 0 records the values of test accuracy, we need to ensure that the variable *config* at lines 258 and 270 specifies the correct devices. We list the *config* for each model in our experiments as follows:
