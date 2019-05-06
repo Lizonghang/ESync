@@ -218,6 +218,12 @@ and draw the following figures:
 
 &emsp;&emsp;&emsp;&emsp;&emsp;&emsp; Test Accuracy on MobileNet-v1
 
+# Speed-up and Convergence
+
+We define the speedup as the time ratio to achieve test accuracy 0.8, and compare the speedup of ESync to Sync and the test accuracy with the standalone training on several classic models. The results show that ESync can greatly accelerate the training process and finally achieve the same (sometimes higher) accuracy as the standalone training. 
+
+<div align="center"><img src="images/speedup-convergence.png" width="500px" /></div>
+
 # References
 
 [[1] Chen, Jianmin, et al. "Revisiting distributed synchronous SGD." arXiv preprint arXiv:1604.00981 (2016).](https://arxiv.org/pdf/1604.00981.pdf)
