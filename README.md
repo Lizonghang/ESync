@@ -189,7 +189,7 @@ and draw the following figures:
 
 <img src="images/resnet18-v1-comm-ratio.png" width="800px" />
 
-> Note: We deploy the parameter server on cloud1 in Fig. 5, which reduces the communication delay of devices on cloud1.
+> Note: We deploy the parameter server on cloud1 in this version, which reduces the communication delay of devices on cloud1, and we have solved this problem in the paper.
 
 > Note: The dotted lines in Fig. 1 and Fig. 2 draw the test accuracy when training on a single device. The test accuracy of standalone training is available in the file *standalone.txt* and should be specified at lines 260 and 272.
 
@@ -201,6 +201,12 @@ and draw the following figures:
 * ResNet18-v1: <code>("cloud3", "gpu0"), ("cloud3", "gpu1"), ("cloud3", "gpu0")</code>;
 * ResNet50-v1: <code>("cloud3", "gpu0"), ("cloud3", "gpu1"), (null, null)</code>;
 * ResNet50-v2: <code>("cloud3", "gpu0"), ("cloud3", "gpu1"), (null, null)</code>;
+
+We list the test accuracy curves of other models on i.i.d. Fashion-MNIST datasets, as shown below.
+
+#### AlexNet
+
+
 
 # References
 
