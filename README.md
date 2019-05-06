@@ -156,8 +156,8 @@ The script [summary.py](https://github.com/Lizonghang/ESync/blob/master/summary.
 
 Run the following commands to visualize the logs:
 
-```python
-python drawer.py -b /path/to/logs -n resnet18-v1
+```
+> python drawer.py -b /path/to/logs -n resnet18-v1
 ```
 
 The script [drawer.py](https://github.com/Lizonghang/ESync/blob/master/drawer.py) will read data from:
@@ -181,7 +181,11 @@ and draw the following figures:
 
 4\. Traffic Load of ESync, Sync, Async;
 
+<img src="images/throughput.png" width="400px" /><img src="images/traffic-load.png" width="400px" />
+
 5\. Communication Time Ratio of ESync, Sync, Async.
+
+<img src="images/comm-ratio.png"/>
 
 # References
 
