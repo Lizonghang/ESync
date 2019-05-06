@@ -30,7 +30,7 @@ Parameter Name | flag | type | Default Value |  Description
 **batch\_size** | -b | int | 64 | The number of samples processed in an iteration on each device.
 **data\_dir**| -dd | string | /home/lizh/ESync/data | Path to the data files. Include a folder named *fashion-mnist*, which contains *t10k-images-idx3-ubyte.gz*, *t10k-labels-idx1-ubyte.gz*, *train-images-idx3-ubyte.gz*, *train-labels-idx1-ubyte.gz*. The Fashion-MNIST dataset is available on [Github](https://github.com/zalandoresearch/fashion-mnist).
 **gpu** | -g | int | 0 | The ID of GPU used for training. We default to using only one GPU for each process in the current version, i.e. only one integer is allowed.
-**cpu** | -c | bool | *False* | Default to training on GPU 0 (set by the option **gpu**), set **cpu** to *True* to support training on CPUs.
+**cpu** | -c | bool | *False* | Default to training on GPU 0 (set by the option **gpu**), set **cpu** to *True* to support training on CPU.
 **network** | -n | string | *resnet18-v1* | The network used to evaluate the performance of *esync*, *sync* and *async*. We support [*alexnet*, *resnet18-v1*, *resnet50-v1*, *resnet50-v2*, *mobilenet-v1*, *mobilenet-v2*, *inception-v3*] in the current version.
 **log\_dir** | -ld | string | /home/lizh/ESync/logs | Path to save the logs. The folder named *logs* will be created automatically at the specified path, and it will be emptied during initialization. The Measure module will create subfolders "{device\_name}{device\_id}" and save log files "iter-{iter\_num}.txt" in these subfolders.
 **eval\_duration** | -e | int | 1 | Interval for model evaluation, default to evaluating the model in each communication round. We recommend evaluating the model on devices with strong computing capability.
@@ -63,22 +63,31 @@ Suppose we have two servers, cloud1 (IP: 10.1.1.29) and cloud3 (IP: 10.1.1.33), 
 
 The State Server is used in ESync algorithm to assign the number of local iterations for each device automatically. The main idea is that, when the slowest device completes computations, other devices have completed local iterations as many times as possible.
 
-Running the following commands on cloud2 to start the State Server:
+Run the following commands on cloud2 to start the State Server:
 
 ```
 > cd path/to/ESync/SimpleStateServer
 > nohup python manage.py runserver 0.0.0.0:10010 > /dev/null &
 ```
 
-Then the State Server will listen on port 10010 in the background to wait for the queries from workers.
+The State Server will listen on port 10010 in the background to wait for the queries from workers.
 
 **Step 2: Start the Schduler**
 
+Run the following commands on cloud2 to start the Scheduler:
+
 ```
 > cd path/to/ESync
-> DMLC_ROLE=scheduler DMLC_PS_ROOT_URI=10.1.1.34 DMLC_PS_ROOT_PORT=9091 DMLC_NUM_SERVER=1 DMLC_NUM_WORKER=6 PS_VERBOSE=1 DMLC_INTERFACE=eno2 \
+> DMLC_ROLE=scheduler DMLC_PS_ROOT_URI=10.1.1.34 DMLC_PS_ROOT_PORT=9091 DMLC_NUM_SERVER=1 \
+DMLC_NUM_WORKER=6 PS_VERBOSE=1 DMLC_INTERFACE=eno2 \
 nohup python main.py -c True -m esync > scheduler.log &
 ```
+
+We start the Scheduler on cloud2 (IP: 10.1.1.34) and listen on port 9091 to wait for the messages (e.g. register, heartbeat) from workers. We specify the Scheduler to use CPU to avoid errors that no GPU resources available, and specify **mode** to *esync* to run ESync algorithm (Set **mode** to *sync* or *async* to run SSGD or ASGD).
+
+> Note: Specify the network interface manually through **DMLC_INTERFACE** if multiple network interfaces exist on the server, otherwise, we may fail to access other servers.
+
+> Note: Set **PS_VERBOSE** to 1, and check the log of PS-LITE to troubleshoot errors.
 
 **Step 3: Start the Server**
 
