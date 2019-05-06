@@ -66,7 +66,7 @@ The state server is used in ESync algorithm to assign the number of local iterat
 Run the following commands on cloud2 to start the state server:
 
 ```
-> cd path/to/ESync/SimpleStateServer
+> cd /path/to/ESync/SimpleStateServer
 > nohup python manage.py runserver 0.0.0.0:10010 > /dev/null &
 ```
 
@@ -77,7 +77,7 @@ The state server will listen on port 10010 in the background to wait for the que
 Run the following commands on cloud2 (IP: 10.1.1.34) to start the scheduler:
 
 ```
-> cd path/to/ESync
+> cd /path/to/ESync
 > DMLC_ROLE=scheduler DMLC_PS_ROOT_URI=10.1.1.34 DMLC_PS_ROOT_PORT=9091 DMLC_NUM_SERVER=1 \
   DMLC_NUM_WORKER=6 PS_VERBOSE=1 DMLC_INTERFACE=eno2 \
   nohup python main.py -c True -m esync > scheduler.log &
@@ -147,12 +147,41 @@ In this section, we summarize the large number of *iter-x.txt* files into a JSON
 Run the following commands to summarize the logs:
 
 ```
-> python summary.py -b path/to/logs -n resnet18-v1 -m esync
+> python summary.py -b /path/to/logs -n resnet18-v1 -m esync
 ```
 
-The script [summary.py](https://github.com/Lizonghang/ESync/blob/master/summary.py) will read files from path/to/logs/resnet18-v1/esync and generate a JSON file named *ESync.json* there.
+The script [summary.py](https://github.com/Lizonghang/ESync/blob/master/summary.py) will read files from /path/to/logs/resnet18-v1/esync and generate a JSON file named *ESync.json* there.
 
 ### Visualization
+
+Run the following commands to visualize the logs:
+
+```
+python drawer.py -b /path/to/logs -n resnet18-v1
+```
+
+The script [drawer.py](https://github.com/Lizonghang/ESync/blob/master/drawer.py) will read data from:
+
+* /path/to/logs/resnet18-v1/esync/ESync.json
+* /path/to/logs/resnet18-v1/sync/Sync.json
+* /path/to/logs/resnet18-v1/async/Async.json (optional)
+* /path/to/logs/resnet18-v1/esync-niid/ESync-Non-IID.json (optional)
+* /path/to/logs/resnet18-v1/sync-niid/Sync-Non-IID.json (optional)
+* /path/to/logs/resnet18-v1/async-niid/Async-Non-IID.json (optional)
+
+and draw the following figures:
+
+1\. Test Accuracy Curve of ESync, Sync, Async on i.i.d. Fashion-MNIST dataset;
+
+<img src="images/accuracy-iid.png" align="center" width="500px" />
+
+2\. Test Accuracy Curve of ESync, Sync, Async on non-i.i.d. Fashion-MNIST dataset;
+
+3\. Data Throughput of ESync, Sync, Async;
+
+4\. Traffic Load of ESync, Sync, Async;
+
+5\. Communication Time Ratio of ESync, Sync, Async.
 
 # References
 
