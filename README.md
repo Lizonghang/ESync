@@ -119,7 +119,7 @@ Run the following commands on cloud1 (IP: 10.1.1.29) and cloud3 (IP: 10.1.1.33) 
   nohup python main.py -c 1 -m esync -n resnet18-v1 > worker_cpu.log &
 ```
 
-We start workers on GPU 0, GPU 1 and CPU respectively on both cloud1 and cloud3, and obtain a small-scale heterogeneous cluster with 6 workers, 1 parameter server, 1 scheduler and 1 state server. In the example above, we run a distributed machine learning task to train the ResNet18-v1 model based on ESync algorithm, and the evaluation operations will be performed on device with rank 0.
+We start workers on GPU 0, GPU 1 and CPU respectively on both cloud1 and cloud3, and obtain a small-scale heterogeneous cluster with 6 workers, 1 parameter server, 1 scheduler and 1 state server (optional). In the example above, we run a distributed machine learning task to train the ResNet18-v1 model based on ESync algorithm, and the evaluation operations will be performed on device with rank 0.
 
 # References
 
