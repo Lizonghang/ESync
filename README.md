@@ -154,7 +154,9 @@ The script [summary.py](https://github.com/Lizonghang/ESync/blob/master/summary.
 
 ### Visualization
 
-Run the following commands to visualize the logs:
+#### ResNet18-v1
+
+Run the following commands to visualize the logs of *resnet18-v1*:
 
 ```
 > python drawer.py -b /path/to/logs -n resnet18-v1
@@ -186,6 +188,17 @@ and draw the following figures:
 5\. Communication Time Ratio of ESync, Sync, Async.
 
 <img src="images/resnet18-v1-comm-ratio.png" width="800px" />
+
+> Note: The dotted lines in Fig. 1 and Fig. 2 draw the test accuracy when training on a single device. The test accuracy of standalone training is available in the file *standalone.txt* and should be specified at lines 260 and 272.
+
+> Note: Since only device with rank 0 records the values of test accuracy, we need to ensure that the variable *config* at lines 258 and 270 specifies the correct devices. We list the *config* for each model in our experiments as follows:
+
+* AlexNet: <code>("cloud3", "gpu1"), ("cloud3", "gpu1"), (null, null)</code>;
+* Inception-v3: <code>("cloud3", "gpu0"), ("cloud3", "gpu0"), (null, null)</code>;
+* MobileNet-v1: <code>("cloud3", "gpu1"), ("cloud3", "gpu0"), (null, null)</code>;
+* ResNet18-v1: <code>("cloud3", "gpu0"), ("cloud3", "gpu1"), ("cloud3", "gpu0")</code>;
+* ResNet50-v1: <code>("cloud3", "gpu0"), ("cloud3", "gpu1"), (null, null)</code>;
+* ResNet50-v2: <code>("cloud3", "gpu0"), ("cloud3", "gpu1"), (null, null)</code>;
 
 # References
 
