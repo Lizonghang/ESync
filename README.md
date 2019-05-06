@@ -173,9 +173,10 @@ and draw the following figures:
 
 1\. Test Accuracy Curve of ESync, Sync, Async on i.i.d. Fashion-MNIST dataset;
 
-<img src="images/accuracy-iid.png" align="center" width="500px" />
-
 2\. Test Accuracy Curve of ESync, Sync, Async on non-i.i.d. Fashion-MNIST dataset;
+
+<img src="images/accuracy-iid.png" width="400px" />
+<img src="images/accuracy-niid.png" width="400px" />
 
 3\. Data Throughput of ESync, Sync, Async;
 
