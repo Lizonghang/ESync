@@ -211,12 +211,12 @@ and draw the following figures:
 
 <img src="images/resnet50-v1-accuracy-iid.png" width="400px" /><img src="images/resnet50-v2-accuracy-iid.png" width="400px" />
 
-&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; Test Accuracy on ResNet50-v1
-&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; Test Accuracy on ResNet50-v2
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; Test Accuracy on ResNet50-v1
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; Test Accuracy on ResNet50-v2
 
 <img src="images/mobilenet-v1-accuracy-iid.png" width="400px" />
 
-&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; Test Accuracy on MobileNet-v1
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; Test Accuracy on MobileNet-v1
 
 # References
 
