@@ -202,11 +202,10 @@ and draw the following figures:
 * ResNet50-v1: <code>("cloud3", "gpu0"), ("cloud3", "gpu1"), (null, null)</code>;
 * ResNet50-v2: <code>("cloud3", "gpu0"), ("cloud3", "gpu1"), (null, null)</code>;
 
-We list the test accuracy curves of other models on i.i.d. Fashion-MNIST datasets, as shown below.
+#### Other Models
 
-#### AlexNet
-
-
+<img src="images/alexnet-accuracy-iid.png" width="400px" /><img src="images/inception-v3-accuracy-iid.png" width="400px" />
+<div> AlexNet </div>  <div> Inception-v3 </div>
 
 # References
 
