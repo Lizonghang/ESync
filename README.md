@@ -205,7 +205,8 @@ and draw the following figures:
 #### Other Models
 
 <img src="images/alexnet-accuracy-iid.png" width="400px" /><img src="images/inception-v3-accuracy-iid.png" width="400px" />
-<div> AlexNet </div>  <div> Inception-v3 </div>
+
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; **AlexNet** &emsp;&emsp;&emsp;&emsp;&emsp;&emsp; **Inception-v3** 
 
 # References
 
