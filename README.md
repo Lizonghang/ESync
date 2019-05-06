@@ -61,20 +61,20 @@ Suppose we have two servers, cloud1 (IP: 10.1.1.29) and cloud3 (IP: 10.1.1.33), 
 
 > Note: This step can be ignored if **mode** is not *esync*.
 
-The State Server is used in ESync algorithm to assign the number of local iterations for each device automatically. The main idea is that, when the slowest device completes computations, other devices have completed local iterations as many times as possible.
+The state server is used in ESync algorithm to assign the number of local iterations for each device automatically. The main idea is that, when the slowest device completes computations, other devices have completed local iterations as many times as possible.
 
-Run the following commands on cloud2 to start the State Server:
+Run the following commands on cloud2 to start the state server:
 
 ```
 > cd path/to/ESync/SimpleStateServer
 > nohup python manage.py runserver 0.0.0.0:10010 > /dev/null &
 ```
 
-The State Server will listen on port 10010 in the background to wait for the queries from workers.
+The state server will listen on port 10010 in the background to wait for the queries from workers.
 
 **Step 2: Start the Schduler**
 
-Run the following commands on cloud2 to start the Scheduler:
+Run the following commands on cloud2 (IP: 10.1.1.34) to start the scheduler:
 
 ```
 > cd path/to/ESync
@@ -83,7 +83,7 @@ Run the following commands on cloud2 to start the Scheduler:
   nohup python main.py -c True -m esync > scheduler.log &
 ```
 
-We start the Scheduler on cloud2 (IP: 10.1.1.34) and listen on port 9091 to wait for the messages (e.g. register, heartbeat) from workers. We specify the Scheduler to use CPU to avoid errors that no GPU resources available, and specify **mode** to *esync* to run ESync algorithm (Set **mode** to *sync* or *async* to run SSGD or ASGD).
+We start the scheduler on cloud2 and listen on port 9091 to wait for the messages (e.g. register, heartbeat) from workers. We specify the scheduler to use CPU to avoid errors that no GPU resources available, and specify **mode** to *esync* to run ESync algorithm (Set **mode** to *sync* or *async* to run SSGD or ASGD).
 
 > Note: Specify the network interface manually through **DMLC_INTERFACE** if multiple network interfaces exist on the server, otherwise, we may fail to access other servers.
 
@@ -91,7 +91,7 @@ We start the Scheduler on cloud2 (IP: 10.1.1.34) and listen on port 9091 to wait
 
 **Step 3: Start the Server**
 
-Run the following commands on cloud2 to start the Parameter Server:
+Run the following commands on cloud2 (IP: 10.1.1.34) to start the parameter server:
 
 ```
 > DMLC_ROLE=server DMLC_PS_ROOT_URI=10.1.1.34 DMLC_PS_ROOT_PORT=9091 DMLC_NUM_SERVER=1 \
@@ -99,9 +99,27 @@ Run the following commands on cloud2 to start the Parameter Server:
   nohup python main.py -c True -m esync > server.log &
 ```
 
-The Parameter Server will create a TCP connection to the Scheduler and complete registration automatically by specifying **DMLC\_PS\_ROOT\_URI** and **DMLC\_PS\_ROOT\_PORT** (the same as workers). The aggregation operations will be performed on GPU if **cpu** is set to *False*.
+The parameter server will create a TCP connection to the scheduler and complete registration automatically by specifying **DMLC\_PS\_ROOT\_URI** and **DMLC\_PS\_ROOT\_PORT** (the same as workers). The aggregation operations will be performed on GPU if **cpu** is set to *False*.
 
 **Step 4: Start the Workers**
+
+Run the following commands on cloud1 (IP: 10.1.1.29) and cloud3 (IP: 10.1.1.33) to start the workers:
+
+```
+> DMLC_ROLE=worker DMLC_PS_ROOT_URI=10.1.1.34 DMLC_PS_ROOT_PORT=9091 DMLC_NUM_SERVER=1 \
+  DMLC_NUM_WORKER=6 PS_VERBOSE=1 DMLC_INTERFACE=eno2 \
+  nohup python main.py -g 0 -m esync -n resnet18-v1 > worker_gpu_0.log &
+  
+> DMLC_ROLE=worker DMLC_PS_ROOT_URI=10.1.1.34 DMLC_PS_ROOT_PORT=9091 DMLC_NUM_SERVER=1 \
+  DMLC_NUM_WORKER=6 PS_VERBOSE=1 DMLC_INTERFACE=eno2 \
+  nohup python main.py -g 1 -m esync -n resnet18-v1 > worker_gpu_1.log &
+  
+> DMLC_ROLE=worker DMLC_PS_ROOT_URI=10.1.1.34 DMLC_PS_ROOT_PORT=9091 DMLC_NUM_SERVER=1 \
+  DMLC_NUM_WORKER=6 PS_VERBOSE=1 DMLC_INTERFACE=eno2 \
+  nohup python main.py -c 1 -m esync -n resnet18-v1 > worker_cpu.log &
+```
+
+We start workers on GPU 0, GPU 1 and CPU respectively on both cloud1 and cloud3, and obtain a small-scale heterogeneous cluster with 6 workers, 1 parameter server, 1 scheduler and 1 state server. In the example above, we run a distributed machine learning task to train the ResNet18-v1 model based on ESync algorithm, and the evaluation operations will be performed on device with rank 0.
 
 # References
 
