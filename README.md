@@ -175,17 +175,17 @@ and draw the following figures:
 
 2\. Test Accuracy Curve of ESync, Sync, Async on non-i.i.d. Fashion-MNIST dataset;
 
-<img src="images/accuracy-iid.png" width="400px" /><img src="images/accuracy-niid.png" width="400px" />
+<img src="images/resnet18-v1-accuracy-iid.png" width="400px" /><img src="images/resnet18-v1-accuracy-niid.png" width="400px" />
 
 3\. Data Throughput of ESync, Sync, Async;
 
 4\. Traffic Load of ESync, Sync, Async;
 
-<img src="images/throughput.png" width="400px" /><img src="images/traffic-load.png" width="400px" />
+<img src="images/resnet18-v1-throughput.png" width="400px" /><img src="images/resnet18-v1-traffic-load.png" width="400px" />
 
 5\. Communication Time Ratio of ESync, Sync, Async.
 
-<img src="images/comm-ratio.png"/>
+<img src="images/resnet18-v1-comm-ratio.png" width="800px" />
 
 # References
 
