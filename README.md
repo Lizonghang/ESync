@@ -121,7 +121,7 @@ Run the following commands on cloud1 (IP: 10.1.1.29) and cloud3 (IP: 10.1.1.33) 
 
 We start workers on GPU 0, GPU 1 and CPU respectively on both cloud1 and cloud3, and obtain a small-scale heterogeneous cluster with 6 workers, 1 parameter server, 1 scheduler and 1 state server (optional). In the example above, we run a distributed machine learning task to train the ResNet18-v1 model based on ESync algorithm, and the evaluation operations will be performed on device with rank 0.
 
-## Data Visualization
+## Log Visualization
 
 To visualize the log data, we should collect the log files on cloud1 and cloud3 manually. Take the ResNet18-v1 model and ESync algorithm as an example, we create a new folder named *resnet18-v1* with a subfolder named *esync*, and rename the log folders as their host names, the structure is as follows:
 
@@ -150,8 +150,9 @@ Run the following commands to summarize the logs:
 > python summary.py -b path/to/logs -n resnet18-v1 -m esync
 ```
 
-The script [summary.py](https://github.com/Lizonghang/ESync/blob/master/summary.py) reads files from path/to/logs/resnet18-v1/esync and generate a JSON file named *ESync.json* there.
+The script [summary.py](https://github.com/Lizonghang/ESync/blob/master/summary.py) will read files from path/to/logs/resnet18-v1/esync and generate a JSON file named *ESync.json* there.
 
+### Visualization
 
 # References
 
