@@ -185,7 +185,7 @@ and draw the following figures:
 
 <img src="images/resnet18-v1-data-throughput.png" width="400px" /><img src="images/resnet18-v1-traffic-load.png" width="400px" />
 
-5\. Communication Time Ratio of ESync, Sync, Async.
+5\. Computing Time Ratio of ESync, Sync, Async.
 
 <img src="images/resnet18-v1-computing-time-ratio.png" width="800px" />
 
