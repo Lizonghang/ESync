@@ -187,7 +187,7 @@ and draw the following figures:
 
 5\. Communication Time Ratio of ESync, Sync, Async.
 
-<img src="images/resnet18-v1-communication-ratio.png" width="800px" />
+<img src="images/resnet18-v1-computing-time-ratio.png" width="800px" />
 
 > Note: The dotted lines in Fig. 1 and Fig. 2 draw the test accuracy when training on a single device. The test accuracy of standalone training is available in the file *standalone.txt* and should be specified at lines 260 and 272.
 
