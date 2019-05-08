@@ -207,12 +207,12 @@ def draw_computation_communication_ratio(esync_summary, sync_summary, async_summ
     interval = 0.45
     color = ("m", "orange", "b")
 
-    stack_bar21 = [esync_load["cloud3"]["gpu0"], sync_load["cloud3"]["gpu0"], async_load["cloud3"]["gpu0"]]
-    stack_bar22 = [esync_load["cloud3"]["gpu1"], sync_load["cloud3"]["gpu1"], async_load["cloud3"]["gpu1"]]
-    stack_bar23 = [esync_load["cloud3"]["cpu"], sync_load["cloud3"]["cpu"], async_load["cloud3"]["cpu"]]
-    stack_bar24 = [esync_load["cloud1"]["gpu0"], sync_load["cloud1"]["gpu0"], async_load["cloud1"]["gpu0"]]
-    stack_bar25 = [esync_load["cloud1"]["gpu1"], sync_load["cloud1"]["gpu1"], async_load["cloud1"]["gpu1"]]
-    stack_bar26 = [esync_load["cloud1"]["cpu"], sync_load["cloud1"]["cpu"], async_load["cloud1"]["cpu"]]
+    stack_bar21 = [1-esync_load["cloud3"]["gpu0"], 1-sync_load["cloud3"]["gpu0"], 1-async_load["cloud3"]["gpu0"]]
+    stack_bar22 = [1-esync_load["cloud3"]["gpu1"], 1-sync_load["cloud3"]["gpu1"], 1-async_load["cloud3"]["gpu1"]]
+    stack_bar23 = [1-esync_load["cloud3"]["cpu"], 1-sync_load["cloud3"]["cpu"], 1-async_load["cloud3"]["cpu"]]
+    stack_bar24 = [1-esync_load["cloud1"]["gpu0"], 1-sync_load["cloud1"]["gpu0"], 1-async_load["cloud1"]["gpu0"]]
+    stack_bar25 = [1-esync_load["cloud1"]["gpu1"], 1-sync_load["cloud1"]["gpu1"], 1-async_load["cloud1"]["gpu1"]]
+    stack_bar26 = [1-esync_load["cloud1"]["cpu"], 1-sync_load["cloud1"]["cpu"], 1-async_load["cloud1"]["cpu"]]
 
     p1 = plt.bar((0*interval, 3+0*interval, 6+0*interval), stack_bar21, width=width, color=color)
     p2 = plt.bar((1*interval, 3+1*interval, 6+1*interval), stack_bar22, width=width, color=color)
@@ -220,9 +220,9 @@ def draw_computation_communication_ratio(esync_summary, sync_summary, async_summ
     p4 = plt.bar((3*interval, 3+3*interval, 6+3*interval), stack_bar24, width=width, color=color)
     p5 = plt.bar((4*interval, 3+4*interval, 6+4*interval), stack_bar25, width=width, color=color)
     p6 = plt.bar((5*interval, 3+5*interval, 6+5*interval), stack_bar26, width=width, color=color)
-    plt.title("Communication Time Ratio of ESync, Sync, Async", fontsize=fontsize)
-    plt.xlabel("Synchronous Mode", fontsize=fontsize)
-    plt.ylabel("Communication Time Ratio", fontsize=fontsize)
+    plt.title("Computing Time Ratio of ESync, Sync, Async", fontsize=fontsize)
+    plt.xlabel("Devices", fontsize=fontsize)
+    plt.ylabel("Computing Time Ratio", fontsize=fontsize)
     plt.xticks((0*interval, 1*interval, 2*interval, 3*interval, 4*interval, 5*interval,
                 3+0*interval, 3+1*interval, 3+2*interval, 3+3*interval, 3+4*interval, 3+5*interval,
                 6+0*interval, 6+1*interval, 6+2*interval, 6+3*interval, 6+4*interval, 6+5*interval),
@@ -248,7 +248,7 @@ if __name__ == "__main__":
         "async-niid": "Async-Non-IID.json"
     }
 
-    fontsize = 10
+    fontsize = 12
 
     # I.I.D.
     esync_summary = load_summary(os.path.join(base_dir, "esync"), summary_name_dict["esync"])
