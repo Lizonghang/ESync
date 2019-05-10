@@ -33,6 +33,19 @@ def draw_accuracy(esync_summary, sync_summary, async_summary, config, vline=0.9,
     plt.xlim((0, timespan))
     plt.ylim((0, 1))
 
+    markers = ("p", "^", "s")
+    linewidth = 2
+    linestyle = ("-", ":", "--")
+    marker_sizes = (8, 7, 6)
+    if iid:
+        marker_intervals = (32, 16, 32)
+        marker_prefix = [[5, 7, 9], [5], [4, 7, 10]]
+        marker_starts = (15, 15, 40)
+    else:
+        marker_intervals = (8, 8, 16)
+        marker_prefix = [[], [], []]
+        marker_starts = (12, 20, 15)
+
     if esync_summary:
         node, worker = config[0]
         accuracy_list = esync_summary[node][worker]["accuracy_list"]
@@ -41,7 +54,11 @@ def draw_accuracy(esync_summary, sync_summary, async_summary, config, vline=0.9,
         smoothed = [0.1] + smoothed
         elapsed_time_list = [0] + elapsed_time_list
         smoothed = interval_averaging(smoothed, smooth_interval)
-        plt.plot(elapsed_time_list, smoothed, c="m")
+
+        plt.plot(elapsed_time_list, smoothed,
+                 marker=markers[0], markersize=marker_sizes[0],
+                 markevery=marker_prefix[0]+list(range(marker_starts[0], len(elapsed_time_list), marker_intervals[0])),
+                 c="k", linewidth=linewidth, linestyle=linestyle[0])
 
     if sync_summary:
         node, worker = config[1]
@@ -51,7 +68,10 @@ def draw_accuracy(esync_summary, sync_summary, async_summary, config, vline=0.9,
         smoothed = [0.1] + smoothed
         elapsed_time_list = [0] + elapsed_time_list
         smoothed = interval_averaging(smoothed, smooth_interval)
-        plt.plot(elapsed_time_list, smoothed, c="orange")
+        plt.plot(elapsed_time_list, smoothed,
+                 marker=markers[1], markersize=marker_sizes[1],
+                 markevery=marker_prefix[1]+list(range(marker_starts[1], len(elapsed_time_list), marker_intervals[1])),
+                 c="k", linewidth=linewidth, linestyle=linestyle[1])
 
     if async_summary:
         node, worker = config[2]
@@ -61,10 +81,13 @@ def draw_accuracy(esync_summary, sync_summary, async_summary, config, vline=0.9,
         smoothed = [0.1] + smoothed
         elapsed_time_list = [0] + elapsed_time_list
         smoothed = interval_averaging(smoothed, smooth_interval)
-        plt.plot(elapsed_time_list, smoothed, c="b")
+        plt.plot(elapsed_time_list, smoothed,
+                 marker=markers[2], markersize=marker_sizes[2],
+                 markevery=marker_prefix[2]+list(range(marker_starts[2], len(elapsed_time_list), marker_intervals[2])),
+                 c="k", linewidth=linewidth, linestyle=linestyle[2])
 
-    plt.legend(["ESync", "Sync", "Async"], fontsize=fontsize)
-    plt.plot((0, timespan), (vline, vline), c="k", linestyle=":", linewidth="1")
+    plt.plot((0, timespan), (vline, vline), c="k", linestyle="--", linewidth=1)
+    plt.legend(["ESync", "Sync", "Async", "Standalone"], fontsize=fontsize)
 
 
 def draw_data_throughput(esync_summary, sync_summary, async_summary, fignum=1):
@@ -107,12 +130,11 @@ def draw_data_throughput(esync_summary, sync_summary, async_summary, fignum=1):
         async_throughput = int(total_samples / total_time)
         print("[Async] Data Throughput (samples per second):", async_throughput)
 
-    plt.figure(fignum, figsize=(6, 4))
-    plt.bar(x=(0, 1, 2),
-            height=(esync_throughput, sync_throughput, async_throughput),
-            color=("m", "orange", "b"),
-            width=0.5,
-            align="center")
+    plt.figure(fignum)
+    hatches = ("x", "/", "\\")
+    plt.bar(x=0, height=esync_throughput, color="w", edgecolor="k", width=0.6, align="center", hatch=hatches[0])
+    plt.bar(x=1, height=sync_throughput, color="w", edgecolor="k", width=0.6, align="center", hatch=hatches[1])
+    plt.bar(x=2, height=async_throughput, color="w", edgecolor="k", width=0.6, align="center", hatch=hatches[2])
     plt.title("Data Throughput of ESync, Sync, Async", fontsize=fontsize)
     plt.xlabel("Synchronous Mode", fontsize=fontsize)
     plt.ylabel("Data Throughput (samples per second)", fontsize=fontsize)
@@ -159,12 +181,11 @@ def draw_traffic_load(esync_summary, sync_summary, async_summary, config, fignum
         async_load = int(data_size / total_time)
         print("[Async] Traffic Load (MBytes per second):", async_load)
 
-    plt.figure(fignum, figsize=(6, 4))
-    plt.bar(x=(0, 1, 2),
-            height=(esync_load, sync_load, async_load),
-            color=("m", "orange", "b"),
-            width=0.5,
-            align="center")
+    plt.figure(fignum)
+    hatches = ("x", "/", "\\")
+    plt.bar(x=0, height=esync_load, color="w", edgecolor="k", width=0.6, align="center", hatch=hatches[0])
+    plt.bar(x=1, height=sync_load, color="w", edgecolor="k", width=0.6, align="center", hatch=hatches[1])
+    plt.bar(x=2, height=async_load, color="w", edgecolor="k", width=0.6, align="center", hatch=hatches[2])
     plt.title("Traffic Load of ESync, Sync, Async", fontsize=fontsize)
     plt.xlabel("Synchronous Mode", fontsize=fontsize)
     plt.ylabel("Traffic Load (MBytes per second)", fontsize=fontsize)
@@ -203,23 +224,25 @@ def draw_computation_communication_ratio(esync_summary, sync_summary, async_summ
                 async_load[node][worker] = total_communication_time / total_time
 
     plt.figure(fignum)
-    width = 0.35
-    interval = 0.45
-    color = ("m", "orange", "b")
-
     stack_bar21 = [1-esync_load["cloud3"]["gpu0"], 1-sync_load["cloud3"]["gpu0"], 1-async_load["cloud3"]["gpu0"]]
     stack_bar22 = [1-esync_load["cloud3"]["gpu1"], 1-sync_load["cloud3"]["gpu1"], 1-async_load["cloud3"]["gpu1"]]
     stack_bar23 = [1-esync_load["cloud3"]["cpu"], 1-sync_load["cloud3"]["cpu"], 1-async_load["cloud3"]["cpu"]]
     stack_bar24 = [1-esync_load["cloud1"]["gpu0"], 1-sync_load["cloud1"]["gpu0"], 1-async_load["cloud1"]["gpu0"]]
     stack_bar25 = [1-esync_load["cloud1"]["gpu1"], 1-sync_load["cloud1"]["gpu1"], 1-async_load["cloud1"]["gpu1"]]
     stack_bar26 = [1-esync_load["cloud1"]["cpu"], 1-sync_load["cloud1"]["cpu"], 1-async_load["cloud1"]["cpu"]]
+    stack_bars = [stack_bar21, stack_bar22, stack_bar23, stack_bar24, stack_bar25, stack_bar26]
 
-    p1 = plt.bar((0*interval, 3+0*interval, 6+0*interval), stack_bar21, width=width, color=color)
-    p2 = plt.bar((1*interval, 3+1*interval, 6+1*interval), stack_bar22, width=width, color=color)
-    p3 = plt.bar((2*interval, 3+2*interval, 6+2*interval), stack_bar23, width=width, color=color)
-    p4 = plt.bar((3*interval, 3+3*interval, 6+3*interval), stack_bar24, width=width, color=color)
-    p5 = plt.bar((4*interval, 3+4*interval, 6+4*interval), stack_bar25, width=width, color=color)
-    p6 = plt.bar((5*interval, 3+5*interval, 6+5*interval), stack_bar26, width=width, color=color)
+    width = 0.35
+    interval = 0.45
+    hatches = ("x", "/", "\\")
+
+    ps = []
+    for i in range(6):
+        for j in range(3):
+            p = plt.bar(3*j+i*interval, stack_bars[i][j],
+                        color="w", edgecolor="k", width=width, align="center", hatch=hatches[j])
+            ps.append(p)
+
     plt.title("Computing Time Ratio of ESync, Sync, Async", fontsize=fontsize)
     plt.xlabel("Devices", fontsize=fontsize)
     plt.ylabel("Computing Time Ratio", fontsize=fontsize)
@@ -229,7 +252,7 @@ def draw_computation_communication_ratio(esync_summary, sync_summary, async_summ
                ("cloud3\ngpu0", "cloud3\ngpu1", "cloud3\ncpu", "cloud1\ngpu0", "cloud1\ngpu1", "cloud1\ncpu",
                 "cloud3\ngpu0", "cloud3\ngpu1", "cloud3\ncpu", "cloud1\ngpu0", "cloud1\ngpu1", "cloud1\ncpu",
                 "cloud3\ngpu0", "cloud3\ngpu1", "cloud3\ncpu", "cloud1\ngpu0", "cloud1\ngpu1", "cloud1\ncpu"))
-    plt.legend((p1[0], p1[1], p1[2]), ("ESync", "Sync", "Async"), fontsize=fontsize)
+    plt.legend(ps[:3], ("ESync", "Sync", "Async"), fontsize=fontsize)
 
 
 if __name__ == "__main__":
@@ -257,7 +280,7 @@ if __name__ == "__main__":
 
     config = [("cloud3", "gpu0"), ("cloud3", "gpu1"), ("cloud3", "gpu0"), True]
     draw_accuracy(esync_summary, sync_summary, async_summary, config,
-                  vline=0.926, fignum=0, down_sample_interval=5, smooth_interval=10, shift=0, timespan=120)
+                  vline=0.926, fignum=0, down_sample_interval=5, smooth_interval=10)
     draw_data_throughput(esync_summary, sync_summary, async_summary, fignum=1)
     draw_traffic_load(esync_summary, sync_summary, async_summary, config, fignum=2)
     draw_computation_communication_ratio(esync_summary, sync_summary, async_summary, fignum=3)
