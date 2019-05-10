@@ -33,6 +33,7 @@ def draw_accuracy(esync_summary, sync_summary, async_summary, config, vline=0.9,
     plt.xlim((0, timespan))
     plt.ylim((0, 1))
 
+    colors = ("m", "orange", "b")
     markers = ("p", "^", "s")
     linewidth = 2
     linestyle = ("-", ":", "--")
@@ -58,7 +59,7 @@ def draw_accuracy(esync_summary, sync_summary, async_summary, config, vline=0.9,
         plt.plot(elapsed_time_list, smoothed,
                  marker=markers[0], markersize=marker_sizes[0],
                  markevery=marker_prefix[0]+list(range(marker_starts[0], len(elapsed_time_list), marker_intervals[0])),
-                 c="k", linewidth=linewidth, linestyle=linestyle[0])
+                 c=colors[0], linewidth=linewidth, linestyle=linestyle[0])
 
     if sync_summary:
         node, worker = config[1]
@@ -71,7 +72,7 @@ def draw_accuracy(esync_summary, sync_summary, async_summary, config, vline=0.9,
         plt.plot(elapsed_time_list, smoothed,
                  marker=markers[1], markersize=marker_sizes[1],
                  markevery=marker_prefix[1]+list(range(marker_starts[1], len(elapsed_time_list), marker_intervals[1])),
-                 c="k", linewidth=linewidth, linestyle=linestyle[1])
+                 c=colors[1], linewidth=linewidth, linestyle=linestyle[1])
 
     if async_summary:
         node, worker = config[2]
@@ -84,7 +85,7 @@ def draw_accuracy(esync_summary, sync_summary, async_summary, config, vline=0.9,
         plt.plot(elapsed_time_list, smoothed,
                  marker=markers[2], markersize=marker_sizes[2],
                  markevery=marker_prefix[2]+list(range(marker_starts[2], len(elapsed_time_list), marker_intervals[2])),
-                 c="k", linewidth=linewidth, linestyle=linestyle[2])
+                 c=colors[2], linewidth=linewidth, linestyle=linestyle[2])
 
     plt.plot((0, timespan), (vline, vline), c="k", linestyle="--", linewidth=1)
     plt.legend(["ESync", "Sync", "Async", "Standalone"], fontsize=fontsize)
@@ -131,10 +132,11 @@ def draw_data_throughput(esync_summary, sync_summary, async_summary, fignum=1):
         print("[Async] Data Throughput (samples per second):", async_throughput)
 
     plt.figure(fignum)
+    colors = ("m", "orange", "b")
     hatches = ("x", "/", "\\")
-    plt.bar(x=0, height=esync_throughput, color="w", edgecolor="k", width=0.6, align="center", hatch=hatches[0])
-    plt.bar(x=1, height=sync_throughput, color="w", edgecolor="k", width=0.6, align="center", hatch=hatches[1])
-    plt.bar(x=2, height=async_throughput, color="w", edgecolor="k", width=0.6, align="center", hatch=hatches[2])
+    plt.bar(x=0, height=esync_throughput, color="w", edgecolor=colors[0], width=0.6, align="center", hatch=hatches[0])
+    plt.bar(x=1, height=sync_throughput, color="w", edgecolor=colors[1], width=0.6, align="center", hatch=hatches[1])
+    plt.bar(x=2, height=async_throughput, color="w", edgecolor=colors[2], width=0.6, align="center", hatch=hatches[2])
     plt.title("Data Throughput of ESync, Sync, Async", fontsize=fontsize)
     plt.xlabel("Synchronous Mode", fontsize=fontsize)
     plt.ylabel("Data Throughput (samples per second)", fontsize=fontsize)
@@ -182,10 +184,11 @@ def draw_traffic_load(esync_summary, sync_summary, async_summary, config, fignum
         print("[Async] Traffic Load (MBytes per second):", async_load)
 
     plt.figure(fignum)
+    colors = ("m", "orange", "b")
     hatches = ("x", "/", "\\")
-    plt.bar(x=0, height=esync_load, color="w", edgecolor="k", width=0.6, align="center", hatch=hatches[0])
-    plt.bar(x=1, height=sync_load, color="w", edgecolor="k", width=0.6, align="center", hatch=hatches[1])
-    plt.bar(x=2, height=async_load, color="w", edgecolor="k", width=0.6, align="center", hatch=hatches[2])
+    plt.bar(x=0, height=esync_load, color="w", edgecolor=colors[0], width=0.6, align="center", hatch=hatches[0])
+    plt.bar(x=1, height=sync_load, color="w", edgecolor=colors[1], width=0.6, align="center", hatch=hatches[1])
+    plt.bar(x=2, height=async_load, color="w", edgecolor=colors[2], width=0.6, align="center", hatch=hatches[2])
     plt.title("Traffic Load of ESync, Sync, Async", fontsize=fontsize)
     plt.xlabel("Synchronous Mode", fontsize=fontsize)
     plt.ylabel("Traffic Load (MBytes per second)", fontsize=fontsize)
@@ -234,13 +237,14 @@ def draw_computation_communication_ratio(esync_summary, sync_summary, async_summ
 
     width = 0.35
     interval = 0.45
+    colors = ("m", "orange", "b")
     hatches = ("x", "/", "\\")
 
     ps = []
     for i in range(6):
         for j in range(3):
             p = plt.bar(3*j+i*interval, stack_bars[i][j],
-                        color="w", edgecolor="k", width=width, align="center", hatch=hatches[j])
+                        color="w", edgecolor=colors[j], width=width, align="center", hatch=hatches[j])
             ps.append(p)
 
     plt.title("Computing Time Ratio of ESync, Sync, Async", fontsize=fontsize)
