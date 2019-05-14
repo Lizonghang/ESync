@@ -42,6 +42,7 @@ if __name__ == "__main__":
     parser.add_argument("-ld", "--log-dir", type=str, default=LOG_DIR)
     parser.add_argument("-e", "--eval-duration", type=int, default=EVAL_DURATION)
     parser.add_argument("-m", "--mode", type=str, default=MODE)
+    parser.add_argument("-dcasgd", "--use-dcasgd", type=bool, default=USE_DCASGD)
     parser.add_argument("-s", "--split-by-class", type=bool, default=SPLIT_BY_CLASS)
     parser.add_argument("-ip", "--state-server-ip", type=str, default=STATE_SERVER_IP)
     parser.add_argument("-port", "--state-server-port", type=str, default=STATE_SERVER_PORT)
@@ -57,6 +58,7 @@ if __name__ == "__main__":
     log_dir = args.log_dir
     ctx = mx.cpu() if args.cpu else mx.gpu(args.gpu)
     mode = args.mode
+    use_dcasgd = args.use_dcasgd
     shape = (batch_size, 1, 28, 28)
     split_by_class = args.split_by_class
     state_server_ip = args.state_server_ip
@@ -118,6 +120,9 @@ if __name__ == "__main__":
         trainer(kwargs)
     elif mode == "async":
         from trainer.async_trainer import trainer
+        kwargs.update({
+            "use_dcasgd": use_dcasgd
+        })
         trainer(kwargs)
     elif mode == "local":
         from trainer.local_trainer import trainer

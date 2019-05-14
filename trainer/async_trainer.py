@@ -14,9 +14,11 @@ def trainer(kwargs):
     net = kwargs["net"]
     loss = kwargs["loss"]
     split_by_class = kwargs["split_by_class"]
+    use_dcasgd = kwargs["use_dcasgd"]
 
     kvstore_dist = kv.create("dist_async")
-    optimizer = mx.optimizer.SGD(learning_rate=lr)
+    optimizer = mx.optimizer.DCASGD(learning_rate=lr) \
+        if use_dcasgd else mx.optimizer.SGD(learning_rate=lr)
     kvstore_dist.set_optimizer(optimizer)
     rank = kvstore_dist.rank
     num_workers = kvstore_dist.num_workers
