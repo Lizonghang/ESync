@@ -191,10 +191,10 @@ if __name__ == "__main__":
     summaries = [esync_summary, sync_summary, async_summary, dcasgd_summary]
 
     config = [("cloud3", "gpu0"), ("cloud3", "gpu1"), ("cloud3", "gpu0"), ("cloud3", "gpu1"), True]
-    # draw_accuracy(summaries, config, vline=0.926, fignum=0, down_sample_interval=5, smooth_interval=10)
-    # draw_data_throughput(summaries, fignum=1)
-    # draw_traffic_load(summaries, config, fignum=2)
-    # draw_computing_time_ratio(summaries, fignum=3)
+    draw_accuracy(summaries, config, vline=0.926, fignum=0, down_sample_interval=5, smooth_interval=10)
+    draw_data_throughput(summaries, fignum=1)
+    draw_traffic_load(summaries, config, fignum=2)
+    draw_computing_time_ratio(summaries, fignum=3)
 
     # Non I.I.D.
     esync_niid_summary = load_summary(os.path.join(base_dir, "esync-niid"), summary_name_dict["esync-niid"])
