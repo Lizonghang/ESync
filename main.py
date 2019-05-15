@@ -13,21 +13,21 @@ if __name__ == "__main__":
     [Distributed]
     DMLC_ROLE=scheduler DMLC_PS_ROOT_URI=10.1.1.34 DMLC_PS_ROOT_PORT=9091 DMLC_NUM_SERVER=1 DMLC_NUM_WORKER=6 \
         PS_VERBOSE=1 DMLC_INTERFACE=eno2\
-        nohup python ~/ESync/main.py -c 1 -m esync > scheduler.log &
+        nohup python ~/ESync/main.py -c 1 -m async -dcasgd True > scheduler.log &
 
     DMLC_ROLE=server DMLC_PS_ROOT_URI=10.1.1.34 DMLC_PS_ROOT_PORT=9091 DMLC_NUM_SERVER=1 DMLC_NUM_WORKER=6 \
         PS_VERBOSE=1 DMLC_INTERFACE=eno2\
-        nohup python ~/ESync/main.py -c 1 -m esync > server.log &
+        nohup python ~/ESync/main.py -c 1 -m async -dcasgd True > server.log &
 
     DMLC_ROLE=worker DMLC_PS_ROOT_URI=10.1.1.34 DMLC_PS_ROOT_PORT=9091 DMLC_NUM_SERVER=1 DMLC_NUM_WORKER=6 \
         PS_VERBOSE=1 DMLC_INTERFACE=eno2\
-        nohup python ~/ESync/main.py -g 0 -m esync -n resnet18-v1 > worker_gpu_0.log &
+        nohup python ~/ESync/main.py -g 0 -m async -dcasgd True -n resnet18-v1 -s True > worker_gpu_0.log &
     DMLC_ROLE=worker DMLC_PS_ROOT_URI=10.1.1.34 DMLC_PS_ROOT_PORT=9091 DMLC_NUM_SERVER=1 DMLC_NUM_WORKER=6 \
         PS_VERBOSE=1 DMLC_INTERFACE=eno2\
-        nohup python ~/ESync/main.py -g 1 -m esync -n resnet18-v1 > worker_gpu_1.log &
+        nohup python ~/ESync/main.py -g 1 -m async -dcasgd True -n resnet18-v1 -s True > worker_gpu_1.log &
     DMLC_ROLE=worker DMLC_PS_ROOT_URI=10.1.1.34 DMLC_PS_ROOT_PORT=9091 DMLC_NUM_SERVER=1 DMLC_NUM_WORKER=6 \
         PS_VERBOSE=1 DMLC_INTERFACE=eno2\
-        nohup python ~/ESync/main.py -c 1 -m esync -n resnet18-v1 > worker_cpu.log &
+        nohup python ~/ESync/main.py -c 1 -m async -dcasgd True -n resnet18-v1 -s True > worker_cpu.log &
     """
 
     parser = argparse.ArgumentParser()

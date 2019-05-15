@@ -86,7 +86,9 @@ if __name__ == "__main__":
         "sync": "Sync.json",
         "sync-niid": "Sync-Non-IID.json",
         "async": "Async.json",
-        "async-niid": "Async-Non-IID.json"
+        "async-niid": "Async-Non-IID.json",
+        "dcasgd": "DCASGD.json",
+        "dcasgd-niid": "DCASGD-Non-IID.json"
     }
 
     base_dir = os.path.join(args.base_dir, args.network, args.mode)
