@@ -22,7 +22,7 @@ def interval_averaging(accuracy_list, interval):
 def draw_accuracy(summaries, config, vline=0.9,
                   fignum=0, timespan=120, down_sample_interval=10, smooth_interval=10, shift=0):
     plt.figure(fignum)
-    iid = config[3]
+    iid = config[4]
     title = "Test Accuracy Curve of ESync, SSGD, ASGD, DC-ASGD on %si.i.d. dataset" % ("" if iid else "non-")
     plt.title(title, fontsize=fontsize)
     plt.xlabel("Time (minutes)", fontsize=fontsize)
@@ -40,9 +40,9 @@ def draw_accuracy(summaries, config, vline=0.9,
         marker_prefix = [[5, 7, 9], [5], [7, 10], [13]]
         marker_starts = (15, 15, 40, 30)
     else:
-        marker_intervals = (8, 8, 16)
-        marker_prefix = [[], [], []]
-        marker_starts = (12, 20, 15)
+        marker_intervals = (8, 8, 16, 16)
+        marker_prefix = [[], [], [], []]
+        marker_starts = (12, 20, 15, 20)
 
     for idx, summary in enumerate(summaries):
         node, worker = config[idx]
@@ -191,10 +191,10 @@ if __name__ == "__main__":
     summaries = [esync_summary, sync_summary, async_summary, dcasgd_summary]
 
     config = [("cloud3", "gpu0"), ("cloud3", "gpu1"), ("cloud3", "gpu0"), ("cloud3", "gpu1"), True]
-    draw_accuracy(summaries, config, vline=0.926, fignum=0, down_sample_interval=5, smooth_interval=10)
-    draw_data_throughput(summaries, fignum=1)
-    draw_traffic_load(summaries, config, fignum=2)
-    draw_computing_time_ratio(summaries, fignum=3)
+    # draw_accuracy(summaries, config, vline=0.926, fignum=0, down_sample_interval=5, smooth_interval=10)
+    # draw_data_throughput(summaries, fignum=1)
+    # draw_traffic_load(summaries, config, fignum=2)
+    # draw_computing_time_ratio(summaries, fignum=3)
 
     # Non I.I.D.
     esync_niid_summary = load_summary(os.path.join(base_dir, "esync-niid"), summary_name_dict["esync-niid"])
