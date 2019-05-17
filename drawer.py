@@ -46,6 +46,8 @@ def draw_accuracy(summaries, config, vline=0.9,
 
     for idx, summary in enumerate(summaries):
         node, worker = config[idx]
+        if node == None:
+            continue
         accuracy_list = summary[node][worker]["accuracy_list"]
         elapsed_time_list = [s / 60. for s in summary[node][worker]["elapsed_time_list"]]
         smoothed, elapsed_time_list = down_sampling(accuracy_list, elapsed_time_list, down_sample_interval, shift)
@@ -63,6 +65,8 @@ def draw_accuracy(summaries, config, vline=0.9,
 
 
 def draw_data_throughput(summaries, fignum=1):
+    assert len(summaries) == 4
+
     plt.figure(fignum)
     colors = ("m", "orange", "b", "g")
     hatches = ("x", "/", "\\", "-")
@@ -88,6 +92,8 @@ def draw_data_throughput(summaries, fignum=1):
 
 
 def draw_traffic_load(summaries, config, fignum=2):
+    assert len(summaries) == 4
+
     plt.figure(fignum)
     colors = ("m", "orange", "b", "g")
     hatches = ("x", "/", "\\", "-")
@@ -124,6 +130,8 @@ def draw_traffic_load(summaries, config, fignum=2):
 
 
 def draw_computing_time_ratio(summaries, fignum=3):
+    assert len(summaries) == 4
+
     num_workers = 6
     num_modes = len(summaries)
     width = 0.5
