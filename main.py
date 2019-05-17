@@ -12,22 +12,22 @@ if __name__ == "__main__":
 
     [Distributed]
     DMLC_ROLE=scheduler DMLC_PS_ROOT_URI=10.1.1.34 DMLC_PS_ROOT_PORT=9091 DMLC_NUM_SERVER=1 DMLC_NUM_WORKER=6 \
-        PS_VERBOSE=1 DMLC_INTERFACE=eno2\
-        nohup python ~/ESync/main.py -c 1 -m async -dcasgd True > scheduler.log &
+        PS_VERBOSE=1 DMLC_INTERFACE=eno2 \
+        nohup python ~/ESync/main.py -c 1 -m esync -dcasgd 0 -l 0.0005 > scheduler.log &
 
     DMLC_ROLE=server DMLC_PS_ROOT_URI=10.1.1.34 DMLC_PS_ROOT_PORT=9091 DMLC_NUM_SERVER=1 DMLC_NUM_WORKER=6 \
-        PS_VERBOSE=1 DMLC_INTERFACE=eno2\
-        nohup python ~/ESync/main.py -c 1 -m async -dcasgd True > server.log &
+        PS_VERBOSE=1 DMLC_INTERFACE=eno2 \
+        nohup python ~/ESync/main.py -c 1 -m esync -dcasgd 0 -l 0.0005 > server.log &
 
     DMLC_ROLE=worker DMLC_PS_ROOT_URI=10.1.1.34 DMLC_PS_ROOT_PORT=9091 DMLC_NUM_SERVER=1 DMLC_NUM_WORKER=6 \
-        PS_VERBOSE=1 DMLC_INTERFACE=eno2\
-        nohup python ~/ESync/main.py -g 0 -m async -dcasgd True -n resnet18-v1 -s True > worker_gpu_0.log &
+        PS_VERBOSE=1 DMLC_INTERFACE=eno2 \
+        nohup python ~/ESync/main.py -g 0 -m esync -dcasgd 0 -n resnet18-v1 -s 0 -l 0.0005 > worker_gpu_0.log &
     DMLC_ROLE=worker DMLC_PS_ROOT_URI=10.1.1.34 DMLC_PS_ROOT_PORT=9091 DMLC_NUM_SERVER=1 DMLC_NUM_WORKER=6 \
-        PS_VERBOSE=1 DMLC_INTERFACE=eno2\
-        nohup python ~/ESync/main.py -g 1 -m async -dcasgd True -n resnet18-v1 -s True > worker_gpu_1.log &
+        PS_VERBOSE=1 DMLC_INTERFACE=eno2 \
+        nohup python ~/ESync/main.py -g 1 -m esync -dcasgd 0 -n resnet18-v1 -s 0 -l 0.0005 > worker_gpu_1.log &
     DMLC_ROLE=worker DMLC_PS_ROOT_URI=10.1.1.34 DMLC_PS_ROOT_PORT=9091 DMLC_NUM_SERVER=1 DMLC_NUM_WORKER=6 \
-        PS_VERBOSE=1 DMLC_INTERFACE=eno2\
-        nohup python ~/ESync/main.py -c 1 -m async -dcasgd True -n resnet18-v1 -s True > worker_cpu.log &
+        PS_VERBOSE=1 DMLC_INTERFACE=eno2 \
+        nohup python ~/ESync/main.py -c 1 -m esync -dcasgd 0 -n resnet18-v1 -s 0 -l 0.0005 > worker_cpu.log &
     """
 
     parser = argparse.ArgumentParser()
@@ -37,13 +37,13 @@ if __name__ == "__main__":
     parser.add_argument("-b", "--batch-size", type=int, default=BATCH_SIZE)
     parser.add_argument("-dd", "--data-dir", type=str, default=DATA_DIR)
     parser.add_argument("-g", "--gpu", type=int, default=DEFAULT_GPU_ID)
-    parser.add_argument("-c", "--cpu", type=bool, default=USE_CPU)
+    parser.add_argument("-c", "--cpu", type=int, default=USE_CPU)
     parser.add_argument("-n", "--network", type=str, default=NETWORK)
     parser.add_argument("-ld", "--log-dir", type=str, default=LOG_DIR)
     parser.add_argument("-e", "--eval-duration", type=int, default=EVAL_DURATION)
     parser.add_argument("-m", "--mode", type=str, default=MODE)
-    parser.add_argument("-dcasgd", "--use-dcasgd", type=bool, default=USE_DCASGD)
-    parser.add_argument("-s", "--split-by-class", type=bool, default=SPLIT_BY_CLASS)
+    parser.add_argument("-dcasgd", "--use-dcasgd", type=int, default=USE_DCASGD)
+    parser.add_argument("-s", "--split-by-class", type=int, default=SPLIT_BY_CLASS)
     parser.add_argument("-ip", "--state-server-ip", type=str, default=STATE_SERVER_IP)
     parser.add_argument("-port", "--state-server-port", type=str, default=STATE_SERVER_PORT)
     args, unknown = parser.parse_known_args()

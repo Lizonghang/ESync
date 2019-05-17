@@ -40,9 +40,9 @@ def draw_accuracy(summaries, config, vline=0.9,
         marker_prefix = [[5, 7, 9], [5], [7, 10], [13]]
         marker_starts = (15, 15, 40, 30)
     else:
-        marker_intervals = (8, 8, 16, 16)
+        marker_intervals = (12, 14, 23, 24)
         marker_prefix = [[], [], [], []]
-        marker_starts = (12, 20, 15, 20)
+        marker_starts = (9, 12, 18, 40)
 
     for idx, summary in enumerate(summaries):
         node, worker = config[idx]
@@ -203,7 +203,7 @@ if __name__ == "__main__":
     dcasgd_niid_summary = load_summary(os.path.join(base_dir, "dcasgd-niid"), summary_name_dict["dcasgd-niid"])
     summaries = [esync_niid_summary, sync_niid_summary, async_niid_summary, dcasgd_niid_summary]
 
-    config = [("cloud3", "gpu1"), ("cloud3", "gpu0"), ("cloud3", "gpu1"), ("cloud3", "gpu1"), False]
-    draw_accuracy(summaries, config, vline=0.926, fignum=4, down_sample_interval=10, smooth_interval=30, shift=7)
+    config = [("cloud3", "gpu0"), ("cloud3", "gpu0"), ("cloud3", "gpu1"), ("cloud3", "gpu1"), False]
+    draw_accuracy(summaries, config, vline=0.926, fignum=4, down_sample_interval=10, smooth_interval=30)
 
     plt.show()

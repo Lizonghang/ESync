@@ -2,8 +2,8 @@
 BATCH_SIZE = 64
 NETWORK = "resnet18-v1"
 MODE = "esync"
-USE_DCASGD = False
-SPLIT_BY_CLASS = False
+USE_DCASGD = 0
+SPLIT_BY_CLASS = 0
 DATA_DIR = "/home/lizh/ESync/data"
 
 # for evaluation
@@ -11,12 +11,12 @@ EVAL_DURATION = 1
 LOG_DIR = "/home/lizh/ESync/logs"
 
 # for optimizer
-LEARNING_RATE = 1e-3
+LEARNING_RATE = 5e-4
 LEARNING_RATE_LOCAL = LEARNING_RATE
 LEARNING_RATE_GLOBAL = 1.0
 
 # devices
-USE_CPU = False
+USE_CPU = 0
 DEFAULT_GPU_ID = 0
 
 # state server
