@@ -46,7 +46,7 @@ def draw_accuracy(summaries, config, vline=0.9,
 
     for idx, summary in enumerate(summaries):
         node, worker = config[idx]
-        if node == None:
+        if node == None or summary == None:
             continue
         accuracy_list = summary[node][worker]["accuracy_list"]
         elapsed_time_list = [s / 60. for s in summary[node][worker]["elapsed_time_list"]]
