@@ -25,18 +25,18 @@ ESync is an efficient synchronous parallel algorithm designed for distributed ma
 
 Parameter Name | Flag | Type | Default Value |  Description 
 :-:|:-:|:-:|:-:|:--
-**learning\_rate** | -l | float | 0.001 |  Set **learning\_rate** when **mode** is *sync*, *async* or *local*. This parameter is used in the optimizer (e.g. SSGD, ASGD) to scale the gradient.
-**local\_lr** | -ll | float | 0.001 | Set **local\_lr** when **mode** is *esync*. This parameter is used in the local optimizer (e.g. SGD, Momentum, Adam) to scale the gradient.
-**global\_lr** | -gl | float | 1.0 | Set **global\_lr** when **mode** is *esync*. This parameter is used in the global aggregation operation to scale the aggregated model updates and can be simply set to 1.0.
+**learning\_rate** | -l | float | 0.001 |  Set **learning\_rate** when **mode** is *sync*, *async* or *local*. This parameter is used in SSGD, ASGD, and DC-ASGD to scale the gradient.
+**local\_lr** | -ll | float | 0.001 | Set **local\_lr** when **mode** is *esync*. This parameter is only used in ESync to scale the gradient.
+**global\_lr** | -gl | float | 1.0 | Set **global\_lr** when **mode** is *esync*. This parameter is only used in ESync to scale the global learning rate, which can be simply set to 1.0.
 **batch\_size** | -b | int | 64 | The number of samples processed in an iteration on each device.
 **data\_dir**| -dd | string | /home/lizh/ESync/data | Path to the data files. Include a folder named *fashion-mnist*, which contains *t10k-images-idx3-ubyte.gz*, *t10k-labels-idx1-ubyte.gz*, *train-images-idx3-ubyte.gz*, *train-labels-idx1-ubyte.gz*. The Fashion-MNIST dataset is available on [Github](https://github.com/zalandoresearch/fashion-mnist).
 **gpu** | -g | int | 0 | The ID of GPU used for training. We default to using only one GPU for each process in the current version, i.e. only one integer is allowed.
 **cpu** | -c | int | 0 | Default to training on GPU 0 (set by the option **gpu**), set **cpu** to 1 to support training on CPU.
-**network** | -n | string | *resnet18-v1* | The network used to evaluate the performance of *esync*, *sync* and *async*. We support [*alexnet*, *resnet18-v1*, *resnet50-v1*, *resnet50-v2*, *mobilenet-v1*, *mobilenet-v2*, *inception-v3*] in the current version.
+**network** | -n | string | *resnet18-v1* | The network used to evaluate the performance of ESync, SSGD, ASGD and DC-ASGD. We support [*alexnet*, *resnet18-v1*, *resnet50-v1*, *resnet50-v2*, *mobilenet-v1*, *mobilenet-v2*, *inception-v3*] in the current version.
 **log\_dir** | -ld | string | /home/lizh/ESync/logs | Path to save the logs. The folder named *logs* will be created automatically at the specified path, and it will be emptied during initialization. The Measure module will create subfolders "{device\_name}{device\_id}" and save log files "iter-{iter\_num}.txt" in these subfolders.
 **eval\_duration** | -e | int | 1 | Interval for model evaluation, default to evaluating the model in each communication round. We recommend evaluating the model on devices with strong computing capability.
 **mode** | -m | string | *esync* | Support [*esync*, *sync*, *async*, *local*]. Set **mode** to *local* to train the model on single device.
-**use\_dcasgd** | -dcasgd | int | 0 | Set **use\_dcasgd** to 1 to enable [DC-ASGD](https://www.researchgate.net/publication/308692359_Asynchronous_Stochastic_Gradient_Descent_with_Delay_Compensation_for_Distributed_Deep_Learning) optimizer.
+**use\_dcasgd** | -dcasgd | int | 0 | Set **use\_dcasgd** to 1 to enable [DC-ASGD](https://www.researchgate.net/publication/308692359_Asynchronous_Stochastic_Gradient_Descent_with_Delay_Compensation_for_Distributed_Deep_Learning) optimizer when **mode** is *async*.
 **split\_by\_class** | -s | int | 0 | Default to allocating datasets using the uniform random sampling. Set **split\_by\_class** to 1 to allocate specific classes of samples to each device, for example, allocate samples with labels 0\~4 to device 0 and samples with labels 5\~9 to device 1.
 **state\_server\_ip** | -ip | string | 10.1.1.34 | The IP of State Server.
 **state\_server\_port** | -port | string | 10010 | The port of State Server.
@@ -173,25 +173,27 @@ The script <code>drawer.py</code> will read data from:
 * /path/to/logs/resnet18-v1/esync/ESync.json
 * /path/to/logs/resnet18-v1/sync/Sync.json
 * /path/to/logs/resnet18-v1/async/Async.json (optional)
+* /path/to/logs/resnet18-v1/dcasgd/DCASGD.json (optional)
 * /path/to/logs/resnet18-v1/esync-niid/ESync-Non-IID.json (optional)
 * /path/to/logs/resnet18-v1/sync-niid/Sync-Non-IID.json (optional)
 * /path/to/logs/resnet18-v1/async-niid/Async-Non-IID.json (optional)
+* /path/to/logs/resnet18-v1/dcasgd-niid/DCASGD-Non-IID.json (optional)
 
 and draw the following figures:
 
-1\. Test Accuracy Curve of ESync, Sync, Async on i.i.d. Fashion-MNIST dataset;
+1\. Test Accuracy Curve of ESync, SSGD, ASGD, DC-ASGD on i.i.d. Fashion-MNIST dataset;
 
-2\. Test Accuracy Curve of ESync, Sync, Async on non-i.i.d. Fashion-MNIST dataset;
+2\. Test Accuracy Curve of ESync, SSGD, ASGD, DC-ASGD on non-i.i.d. Fashion-MNIST dataset;
 
 <img src="images/resnet18-v1-accuracy-iid.png" width="400px" /><img src="images/resnet18-v1-accuracy-non-iid.png" width="400px" />
 
-3\. Data Throughput of ESync, Sync, Async;
+3\. Data Throughput of ESync, SSGD, ASGD, DC-ASGD;
 
-4\. Traffic Load of ESync, Sync, Async;
+4\. Traffic Load of ESync, SSGD, ASGD, DC-ASGD;
 
 <img src="images/resnet18-v1-data-throughput.png" width="400px" /><img src="images/resnet18-v1-traffic-load.png" width="400px" />
 
-5\. Computing Time Ratio of ESync, Sync, Async.
+5\. Computing Time Ratio of ESync, SSGD, ASGD, DC-ASGD.
 
 <img src="images/resnet18-v1-computing-time-ratio.png" width="800px" />
 
