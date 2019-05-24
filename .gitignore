@@ -107,8 +107,10 @@ venv.bak/
 .DS_Store
 .idea/
 
-# big file
+# big files
 data/
 tars/
 logs/
-results
+
+# latex files
+nips-esync-latex/
