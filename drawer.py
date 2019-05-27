@@ -64,6 +64,42 @@ def draw_accuracy(summaries, config, vline=0.9,
     plt.legend(["ESync", "SSGD", "ASGD", "DC-ASGD", "Standalone"], fontsize=fontsize)
 
 
+def draw_accuracy_by_round(summaries, config,
+                           fignum=4, roundspan=200, down_sample_interval=10, smooth_interval=10, shift=0):
+    plt.figure(fignum)
+    title = "Test Accuracy Curve of ESync On AlexNet With Different Heterogeneity"
+    plt.title(title, fontsize=fontsize)
+    plt.xlabel("Communication Round", fontsize=fontsize)
+    plt.ylabel("Test Accuracy", fontsize=fontsize)
+    plt.xlim((0, roundspan))
+    plt.ylim((0, 1))
+
+    colors = ("m", "orange", "b", "g")
+    markers = ("p", "^", "s", "o")
+    linewidth = 2
+    linestyle = ("-", ":", "--", "-.")
+    marker_sizes = (8, 7, 6, 7)
+    marker_intervals = (16, 16, 32, 45)
+    marker_prefix = [[4, 6], [5], [7, 10], [13]]
+    marker_starts = (10, 15, 40, 30)
+
+    for idx, summary in enumerate(summaries):
+        node, worker = config[idx]
+        accuracy_list = summary[node][worker]["accuracy_list"]
+        round_list = list(range(1, len(accuracy_list) + 1))
+        smoothed, round_list = down_sampling(accuracy_list, round_list, down_sample_interval, shift)
+        smoothed = [0.1] + smoothed
+        round_list = [0] + round_list
+        smoothed = interval_averaging(smoothed, smooth_interval)
+        plt.plot(round_list, smoothed,
+                 marker=markers[idx], markersize=marker_sizes[idx],
+                 markevery=marker_prefix[idx]+\
+                           list(range(marker_starts[idx], len(round_list), marker_intervals[idx])),
+                 c=colors[idx], linewidth=linewidth, linestyle=linestyle[idx])
+
+    plt.legend(["ESync-300:1", "SSGD"], fontsize=fontsize)
+
+
 def draw_data_throughput(summaries, fignum=1):
     assert len(summaries) == 4
 
@@ -192,26 +228,33 @@ if __name__ == "__main__":
     fontsize = 12
 
     # I.I.D.
-    esync_summary = load_summary(os.path.join(base_dir, "esync"), summary_name_dict["esync"])
-    sync_summary = load_summary(os.path.join(base_dir, "sync"), summary_name_dict["sync"])
-    async_summary = load_summary(os.path.join(base_dir, "async"), summary_name_dict["async"])
-    dcasgd_summary = load_summary(os.path.join(base_dir, "dcasgd"), summary_name_dict["dcasgd"])
-    summaries = [esync_summary, sync_summary, async_summary, dcasgd_summary]
-
-    config = [("cloud3", "gpu0"), ("cloud3", "gpu1"), ("cloud3", "gpu0"), ("cloud3", "gpu1"), True]
-    draw_accuracy(summaries, config, vline=0.926, fignum=0, down_sample_interval=5, smooth_interval=10)
-    draw_data_throughput(summaries, fignum=1)
-    draw_traffic_load(summaries, config, fignum=2)
-    draw_computing_time_ratio(summaries, fignum=3)
+    # esync_summary = load_summary(os.path.join(base_dir, "esync"), summary_name_dict["esync"])
+    # sync_summary = load_summary(os.path.join(base_dir, "sync"), summary_name_dict["sync"])
+    # async_summary = load_summary(os.path.join(base_dir, "async"), summary_name_dict["async"])
+    # dcasgd_summary = load_summary(os.path.join(base_dir, "dcasgd"), summary_name_dict["dcasgd"])
+    # summaries = [esync_summary, sync_summary, async_summary, dcasgd_summary]
+    #
+    # config = [("cloud3", "gpu0"), ("cloud3", "gpu1"), ("cloud3", "gpu0"), ("cloud3", "gpu1"), True]
+    # draw_accuracy(summaries, config, vline=0.926, fignum=0, down_sample_interval=5, smooth_interval=10)
+    # draw_data_throughput(summaries, fignum=1)
+    # draw_traffic_load(summaries, config, fignum=2)
+    # draw_computing_time_ratio(summaries, fignum=3)
 
     # Non I.I.D.
-    esync_niid_summary = load_summary(os.path.join(base_dir, "esync-niid"), summary_name_dict["esync-niid"])
-    sync_niid_summary = load_summary(os.path.join(base_dir, "sync-niid"), summary_name_dict["sync-niid"])
-    async_niid_summary = load_summary(os.path.join(base_dir, "async-niid"), summary_name_dict["async-niid"])
-    dcasgd_niid_summary = load_summary(os.path.join(base_dir, "dcasgd-niid"), summary_name_dict["dcasgd-niid"])
-    summaries = [esync_niid_summary, sync_niid_summary, async_niid_summary, dcasgd_niid_summary]
+    # esync_niid_summary = load_summary(os.path.join(base_dir, "esync-niid"), summary_name_dict["esync-niid"])
+    # sync_niid_summary = load_summary(os.path.join(base_dir, "sync-niid"), summary_name_dict["sync-niid"])
+    # async_niid_summary = load_summary(os.path.join(base_dir, "async-niid"), summary_name_dict["async-niid"])
+    # dcasgd_niid_summary = load_summary(os.path.join(base_dir, "dcasgd-niid"), summary_name_dict["dcasgd-niid"])
+    # summaries = [esync_niid_summary, sync_niid_summary, async_niid_summary, dcasgd_niid_summary]
+    #
+    # config = [("cloud3", "gpu0"), ("cloud3", "gpu0"), ("cloud3", "gpu1"), ("cloud3", "gpu1"), False]
+    # draw_accuracy(summaries, config, vline=0.926, fignum=4, down_sample_interval=10, smooth_interval=30)
 
-    config = [("cloud3", "gpu0"), ("cloud3", "gpu0"), ("cloud3", "gpu1"), ("cloud3", "gpu1"), False]
-    draw_accuracy(summaries, config, vline=0.926, fignum=4, down_sample_interval=10, smooth_interval=30)
+    esync_summary_1 = load_summary(os.path.join(base_dir, "esync"), summary_name_dict["esync"])
+    esync_summary_2 = load_summary(os.path.join(base_dir, "esync2"), summary_name_dict["esync"])
+    sync_summary = load_summary(os.path.join(base_dir, "sync"), summary_name_dict["sync"])
+    summaries = [esync_summary_1, sync_summary]
+    config = [("cloud3", "gpu0"), ("cloud3", "gpu1")]
+    draw_accuracy_by_round(summaries, config, roundspan=200, down_sample_interval=2, smooth_interval=5)
 
     plt.show()

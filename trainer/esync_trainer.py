@@ -18,6 +18,7 @@ def trainer(kwargs):
     net = kwargs["net"]
     loss = kwargs["loss"]
     split_by_class = kwargs["split_by_class"]
+    factor = kwargs["factor"]
 
     nd.waitall()
     ts = time.time()
@@ -94,6 +95,7 @@ def trainer(kwargs):
                 measure.stop("get_batch")
 
                 measure.start("forward and backward")
+                calc_start_time = time.time()
                 ls = []
                 with autograd.record():
                     y_hats = [net(X) for X in Xs]
@@ -101,6 +103,8 @@ def trainer(kwargs):
                 for l in ls:
                     l.backward()
                 nd.waitall()
+                calc_time = time.time() - calc_start_time
+                time.sleep((factor - 1) * calc_time)
                 measure.stop("forward and backward")
                 measure.add_samples(batch_size)
 
@@ -155,6 +159,9 @@ def trainer(kwargs):
                 self_iters = 0
                 global_iters += 1
                 te = time.time()
+
+                if global_iters == 200:
+                    return 0
 
                 measure.start("reset state server")
                 requests.post(common_url % "reset", data={"r": rank, "t": global_iters, "te": te})

@@ -5,6 +5,7 @@ MODE = "esync"
 USE_DCASGD = 0
 SPLIT_BY_CLASS = 0
 DATA_DIR = "/home/lizh/ESync/data"
+FACTOR = 1
 
 # for evaluation
 EVAL_DURATION = 1

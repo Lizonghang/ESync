@@ -7,6 +7,9 @@ from mxnet.gluon import loss as gloss
 
 if __name__ == "__main__":
     """COMMAND
+    [State Server]
+    nohup python manage.py runserver 0.0.0.0:10010 > /dev/null &
+
     [Standalone]
     python ~/ESync/main.py -g 0 -m local -n resnet18-v1 -l 0.001 -b 64 -e 1000
 
@@ -21,13 +24,13 @@ if __name__ == "__main__":
 
     DMLC_ROLE=worker DMLC_PS_ROOT_URI=10.1.1.34 DMLC_PS_ROOT_PORT=9091 DMLC_NUM_SERVER=1 DMLC_NUM_WORKER=6 \
         PS_VERBOSE=1 DMLC_INTERFACE=eno2 \
-        nohup python ~/ESync/main.py -g 0 -m esync -dcasgd 0 -n resnet50-v2 -s 0 -b 64 -ll 0.0005 > worker_gpu_0.log &
+        nohup python ~/ESync/main.py -g 0 -m esync -dcasgd 0 -n alexnet -s 0 -b 64 -ll 0.0005 -f 10 > worker_gpu_0.log &
     DMLC_ROLE=worker DMLC_PS_ROOT_URI=10.1.1.34 DMLC_PS_ROOT_PORT=9091 DMLC_NUM_SERVER=1 DMLC_NUM_WORKER=6 \
         PS_VERBOSE=1 DMLC_INTERFACE=eno2 \
-        nohup python ~/ESync/main.py -g 1 -m esync -dcasgd 0 -n resnet50-v2 -s 0 -b 64 -ll 0.0005 > worker_gpu_1.log &
+        nohup python ~/ESync/main.py -g 1 -m esync -dcasgd 0 -n alexnet -s 0 -b 64 -ll 0.0005 -f 10 > worker_gpu_1.log &
     DMLC_ROLE=worker DMLC_PS_ROOT_URI=10.1.1.34 DMLC_PS_ROOT_PORT=9091 DMLC_NUM_SERVER=1 DMLC_NUM_WORKER=6 \
         PS_VERBOSE=1 DMLC_INTERFACE=eno2 \
-        nohup python ~/ESync/main.py -c 1 -m esync -dcasgd 0 -n resnet50-v2 -s 0 -b 64 -ll 0.0005 > worker_cpu.log &
+        nohup python ~/ESync/main.py -c 1 -m esync -dcasgd 0 -n alexnet -s 0 -b 64 -ll 0.0005 -f 1 > worker_cpu.log &
     """
 
     parser = argparse.ArgumentParser()
@@ -46,6 +49,7 @@ if __name__ == "__main__":
     parser.add_argument("-s", "--split-by-class", type=int, default=SPLIT_BY_CLASS)
     parser.add_argument("-ip", "--state-server-ip", type=str, default=STATE_SERVER_IP)
     parser.add_argument("-port", "--state-server-port", type=str, default=STATE_SERVER_PORT)
+    parser.add_argument("-f", "--factor", type=int, default=FACTOR)
     args, unknown = parser.parse_known_args()
 
     lr = args.learning_rate
@@ -64,6 +68,8 @@ if __name__ == "__main__":
     state_server_ip = args.state_server_ip
     state_server_port = args.state_server_port
     common_url = "http://{ip}:{port}/%s/".format(ip=state_server_ip, port=state_server_port)
+    factor = args.factor
+    assert factor >= 1
 
     net = None
     if network == "resnet18-v1":
@@ -112,7 +118,8 @@ if __name__ == "__main__":
         kwargs.update({
             "local_lr": local_lr,
             "global_lr": global_lr,
-            "common_url": common_url
+            "common_url": common_url,
+            "factor": factor
         })
         trainer(kwargs)
     elif mode == "sync":
