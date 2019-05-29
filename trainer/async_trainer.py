@@ -7,6 +7,7 @@ def trainer(kwargs):
     lr = kwargs["lr"]
     batch_size = kwargs["batch_size"]
     data_dir = kwargs["data_dir"]
+    data_type = kwargs["data_type"]
     log_dir = kwargs["log_dir"]
     eval_duration = kwargs["eval_duration"]
     ctx = kwargs["ctx"]
@@ -38,7 +39,7 @@ def trainer(kwargs):
         kvstore_dist.init(idx, param.data())
         kvstore_dist.pull(idx, param.data(), priority=-idx)
 
-    train_iter, test_iter = load_data(batch_size, num_workers, rank,
+    train_iter, test_iter = load_data(batch_size, num_workers, rank, data_type=data_type,
                                       split_by_class=split_by_class, resize=shape[-2:], root=data_dir)
 
     if ctx == mx.cpu():

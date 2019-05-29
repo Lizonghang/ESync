@@ -10,6 +10,7 @@ def trainer(kwargs):
     global_lr = kwargs["global_lr"]
     batch_size = kwargs["batch_size"]
     data_dir = kwargs["data_dir"]
+    data_type = kwargs["data_type"]
     log_dir = kwargs["log_dir"]
     eval_duration = kwargs["eval_duration"]
     ctx = kwargs["ctx"]
@@ -45,7 +46,7 @@ def trainer(kwargs):
     if rank == 0:
         requests.post(common_url % "init", data={"num_workers": num_workers, "epsilon": 0.5})
 
-    train_iter, test_iter = load_data(batch_size, num_workers, rank,
+    train_iter, test_iter = load_data(batch_size, num_workers, rank, data_type=data_type,
                                       split_by_class=split_by_class, resize=shape[-2:], root=data_dir)
 
     trainer = mx.gluon.Trainer(net.collect_params(), "sgd", {"learning_rate": local_lr})
@@ -160,7 +161,7 @@ def trainer(kwargs):
                 global_iters += 1
                 te = time.time()
 
-                if global_iters == 200:
+                if global_iters == 201:
                     return 0
 
                 measure.start("reset state server")

@@ -38,12 +38,21 @@ class ClassSplitSampler(gdata.sampler.Sampler):
         return self.part_len
 
 
-def load_data(batch_size, num_workers=1, rank=0, split_by_class=False, resize=None, root=""):
+def load_data(batch_size, num_workers=1, rank=0, data_type="fashion-mnist", split_by_class=False, resize=None, root=""):
     assert os.path.exists(root), "The specified file path does not exist. (%s)" % root
-    root = os.path.join(root, "fashion-mnist")
-    root = os.path.expanduser(root)
-    train = gdata.vision.FashionMNIST(root=root, train=True)
-    test = gdata.vision.FashionMNIST(root=root, train=False)
+
+    if data_type == "fashion-mnist":
+        root = os.path.join(root, "fashion-mnist")
+        root = os.path.expanduser(root)
+        train = gdata.vision.FashionMNIST(root=root, train=True)
+        test = gdata.vision.FashionMNIST(root=root, train=False)
+    elif data_type == "cifar10":
+        root = os.path.join(root, "cifar10")
+        root = os.path.expanduser(root)
+        train = gdata.vision.CIFAR10(root=root, train=True)
+        test = gdata.vision.CIFAR10(root=root, train=False)
+    else:
+        raise NotImplementedError("Dataset %s not support" % data_type)
 
     if num_workers > 1:
         if split_by_class:

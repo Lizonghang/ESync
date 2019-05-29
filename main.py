@@ -16,21 +16,21 @@ if __name__ == "__main__":
     [Distributed]
     DMLC_ROLE=scheduler DMLC_PS_ROOT_URI=10.1.1.34 DMLC_PS_ROOT_PORT=9091 DMLC_NUM_SERVER=1 DMLC_NUM_WORKER=6 \
         PS_VERBOSE=1 DMLC_INTERFACE=eno2 \
-        nohup python ~/ESync/main.py -c 1 -m esync -dcasgd 0 -ll 0.0005 > scheduler.log &
+        nohup python ~/ESync/main.py -c 1 -m esync -dcasgd 0 -ll 0.001 > scheduler.log &
 
     DMLC_ROLE=server DMLC_PS_ROOT_URI=10.1.1.34 DMLC_PS_ROOT_PORT=9091 DMLC_NUM_SERVER=1 DMLC_NUM_WORKER=6 \
         PS_VERBOSE=1 DMLC_INTERFACE=eno2 \
-        nohup python ~/ESync/main.py -c 1 -m esync -dcasgd 0 -ll 0.0005 > server.log &
+        nohup python ~/ESync/main.py -c 1 -m esync -dcasgd 0 -ll 0.001 > server.log &
 
     DMLC_ROLE=worker DMLC_PS_ROOT_URI=10.1.1.34 DMLC_PS_ROOT_PORT=9091 DMLC_NUM_SERVER=1 DMLC_NUM_WORKER=6 \
         PS_VERBOSE=1 DMLC_INTERFACE=eno2 \
-        nohup python ~/ESync/main.py -g 0 -m esync -dcasgd 0 -n alexnet -s 0 -b 64 -ll 0.0005 -f 10 > worker_gpu_0.log &
+        nohup python ~/ESync/main.py -g 0 -m esync -dcasgd 0 -n alexnet -s 0 -b 64 -ll 0.001 -f 2 > worker_gpu_0.log &
     DMLC_ROLE=worker DMLC_PS_ROOT_URI=10.1.1.34 DMLC_PS_ROOT_PORT=9091 DMLC_NUM_SERVER=1 DMLC_NUM_WORKER=6 \
         PS_VERBOSE=1 DMLC_INTERFACE=eno2 \
-        nohup python ~/ESync/main.py -g 1 -m esync -dcasgd 0 -n alexnet -s 0 -b 64 -ll 0.0005 -f 10 > worker_gpu_1.log &
+        nohup python ~/ESync/main.py -g 1 -m esync -dcasgd 0 -n alexnet -s 0 -b 64 -ll 0.001 -f 2 > worker_gpu_1.log &
     DMLC_ROLE=worker DMLC_PS_ROOT_URI=10.1.1.34 DMLC_PS_ROOT_PORT=9091 DMLC_NUM_SERVER=1 DMLC_NUM_WORKER=6 \
         PS_VERBOSE=1 DMLC_INTERFACE=eno2 \
-        nohup python ~/ESync/main.py -c 1 -m esync -dcasgd 0 -n alexnet -s 0 -b 64 -ll 0.0005 -f 1 > worker_cpu.log &
+        nohup python ~/ESync/main.py -c 1 -m esync -dcasgd 0 -n alexnet -s 0 -b 64 -ll 0.001 -f 1 > worker_cpu.log &
     """
 
     parser = argparse.ArgumentParser()
@@ -39,6 +39,7 @@ if __name__ == "__main__":
     parser.add_argument("-gl", "--global-lr", type=float, default=LEARNING_RATE_GLOBAL)
     parser.add_argument("-b", "--batch-size", type=int, default=BATCH_SIZE)
     parser.add_argument("-dd", "--data-dir", type=str, default=DATA_DIR)
+    parser.add_argument("-dt", "--data-type", type=str, default=DATA_TYPE)
     parser.add_argument("-g", "--gpu", type=int, default=DEFAULT_GPU_ID)
     parser.add_argument("-c", "--cpu", type=int, default=USE_CPU)
     parser.add_argument("-n", "--network", type=str, default=NETWORK)
@@ -57,6 +58,7 @@ if __name__ == "__main__":
     global_lr = args.global_lr
     batch_size = args.batch_size
     data_dir = args.data_dir
+    data_type = args.data_type.lower()
     network = args.network
     eval_duration = args.eval_duration
     log_dir = args.log_dir
@@ -69,6 +71,8 @@ if __name__ == "__main__":
     state_server_port = args.state_server_port
     common_url = "http://{ip}:{port}/%s/".format(ip=state_server_ip, port=state_server_port)
     factor = args.factor
+
+    assert data_type in ["fashion-mnist", "cifar10"], "Dataset %s not support." % data_type
     assert factor >= 1
 
     net = None
@@ -104,6 +108,7 @@ if __name__ == "__main__":
         "lr": lr,
         "batch_size": batch_size,
         "data_dir": data_dir,
+        "data_type": data_type,
         "log_dir": log_dir,
         "eval_duration": eval_duration,
         "ctx": ctx,
