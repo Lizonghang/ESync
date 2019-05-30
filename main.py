@@ -11,26 +11,31 @@ if __name__ == "__main__":
     nohup python manage.py runserver 0.0.0.0:10010 > /dev/null &
 
     [Standalone]
-    python ~/ESync/main.py -g 0 -m local -n resnet18-v1 -l 0.001 -b 64 -e 1000
+    python ~/ESync/main.py -m local -g 0 -n resnet18-v1 -dt cifar10 -l 0.0005 -b 64 -e 1
 
     [Distributed]
     DMLC_ROLE=scheduler DMLC_PS_ROOT_URI=10.1.1.34 DMLC_PS_ROOT_PORT=9091 DMLC_NUM_SERVER=1 DMLC_NUM_WORKER=6 \
         PS_VERBOSE=1 DMLC_INTERFACE=eno2 \
-        nohup python ~/ESync/main.py -c 1 -m esync -dcasgd 0 -ll 0.001 > scheduler.log &
+        nohup python ~/ESync/main.py -m esync -dcasgd 0 -c 1 -dt fashion-mnist -ll 0.0005 \
+        > scheduler.log &
 
     DMLC_ROLE=server DMLC_PS_ROOT_URI=10.1.1.34 DMLC_PS_ROOT_PORT=9091 DMLC_NUM_SERVER=1 DMLC_NUM_WORKER=6 \
         PS_VERBOSE=1 DMLC_INTERFACE=eno2 \
-        nohup python ~/ESync/main.py -c 1 -m esync -dcasgd 0 -ll 0.001 > server.log &
+        nohup python ~/ESync/main.py -m esync -dcasgd 0 -c 1 -dt fashion-mnist -ll 0.0005 \
+        > server.log &
 
     DMLC_ROLE=worker DMLC_PS_ROOT_URI=10.1.1.34 DMLC_PS_ROOT_PORT=9091 DMLC_NUM_SERVER=1 DMLC_NUM_WORKER=6 \
         PS_VERBOSE=1 DMLC_INTERFACE=eno2 \
-        nohup python ~/ESync/main.py -g 0 -m esync -dcasgd 0 -n alexnet -s 0 -b 64 -ll 0.001 -f 2 > worker_gpu_0.log &
+        nohup python ~/ESync/main.py -m esync -dcasgd 0 -g 0 -n resnet18-v1 -dt fashion-mnist -s 0 -b 64 -ll 0.0005 \
+        > worker_gpu_0.log &
     DMLC_ROLE=worker DMLC_PS_ROOT_URI=10.1.1.34 DMLC_PS_ROOT_PORT=9091 DMLC_NUM_SERVER=1 DMLC_NUM_WORKER=6 \
         PS_VERBOSE=1 DMLC_INTERFACE=eno2 \
-        nohup python ~/ESync/main.py -g 1 -m esync -dcasgd 0 -n alexnet -s 0 -b 64 -ll 0.001 -f 2 > worker_gpu_1.log &
+        nohup python ~/ESync/main.py -m esync -dcasgd 0 -g 1 -n resnet18-v1 -dt fashion-mnist -s 0 -b 64 -ll 0.0005 \
+        > worker_gpu_1.log &
     DMLC_ROLE=worker DMLC_PS_ROOT_URI=10.1.1.34 DMLC_PS_ROOT_PORT=9091 DMLC_NUM_SERVER=1 DMLC_NUM_WORKER=6 \
         PS_VERBOSE=1 DMLC_INTERFACE=eno2 \
-        nohup python ~/ESync/main.py -c 1 -m esync -dcasgd 0 -n alexnet -s 0 -b 64 -ll 0.001 -f 1 > worker_cpu.log &
+        nohup python ~/ESync/main.py -m esync -dcasgd 0 -c 1 -n resnet18-v1 -dt fashion-mnist -s 0 -b 64 -ll 0.0005 \
+        > worker_cpu.log &
     """
 
     parser = argparse.ArgumentParser()
@@ -65,15 +70,19 @@ if __name__ == "__main__":
     ctx = mx.cpu() if args.cpu else mx.gpu(args.gpu)
     mode = args.mode
     use_dcasgd = args.use_dcasgd
-    shape = (batch_size, 1, 28, 28)
     split_by_class = args.split_by_class
     state_server_ip = args.state_server_ip
     state_server_port = args.state_server_port
     common_url = "http://{ip}:{port}/%s/".format(ip=state_server_ip, port=state_server_port)
     factor = args.factor
-
-    assert data_type in ["fashion-mnist", "cifar10"], "Dataset %s not support." % data_type
     assert factor >= 1
+
+    if data_type == "fashion-mnist":
+        shape = (batch_size, 1, 28, 28)
+    elif data_type == "cifar10":
+        shape = (batch_size, 3, 32, 32)
+    else:
+        raise NotImplementedError("Dataset %s not support." % data_type)
 
     net = None
     if network == "resnet18-v1":

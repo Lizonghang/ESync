@@ -161,9 +161,6 @@ def trainer(kwargs):
                 global_iters += 1
                 te = time.time()
 
-                if global_iters == 201:
-                    return 0
-
                 measure.start("reset state server")
                 requests.post(common_url % "reset", data={"r": rank, "t": global_iters, "te": te})
                 measure.stop("reset state server")
