@@ -11,7 +11,7 @@ if __name__ == "__main__":
     nohup python manage.py runserver 0.0.0.0:10010 > /dev/null &
 
     [Standalone]
-    python ~/ESync/main.py -m local -g 0 -n resnet18-v1 -dt cifar10 -l 0.0005 -b 64 -e 1
+    python ~/ESync/main.py -m local -g 0 -n resnet18-v1 -dt cifar10 -l 0.0005 -b 64 -e 1000
 
     [Distributed]
     DMLC_ROLE=scheduler DMLC_PS_ROOT_URI=10.1.1.34 DMLC_PS_ROOT_PORT=9091 DMLC_NUM_SERVER=1 DMLC_NUM_WORKER=6 \
@@ -78,9 +78,11 @@ if __name__ == "__main__":
     assert factor >= 1
 
     if data_type == "fashion-mnist":
-        shape = (batch_size, 1, 28, 28)
+        depth = 1
+        shape = (batch_size, depth, 28, 28)
     elif data_type == "cifar10":
-        shape = (batch_size, 3, 32, 32)
+        depth = 3
+        shape = (batch_size, depth, 32, 32)
     else:
         raise NotImplementedError("Dataset %s not support." % data_type)
 
@@ -97,7 +99,7 @@ if __name__ == "__main__":
     elif network == "alexnet":
         from symbols.alexnet import alexnet
         net = alexnet(classes=10)
-        shape = (batch_size, 1, 224, 224)
+        shape = (batch_size, depth, 224, 224)
     elif network == "mobilenet-v1":
         from symbols.mobilenet import mobilenet1_0
         net = mobilenet1_0(classes=10)
@@ -107,7 +109,7 @@ if __name__ == "__main__":
     elif network == "inception-v3":
         from symbols.inception import inception_v3
         net = inception_v3(classes=10)
-        shape = (batch_size, 1, 299, 299)
+        shape = (batch_size, depth, 299, 299)
     net.initialize(init=init.Xavier(), ctx=ctx)
     net(nd.random.uniform(shape=shape, ctx=ctx))
 
