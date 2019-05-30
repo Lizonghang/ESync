@@ -74,13 +74,13 @@ def draw_accuracy_by_round(summaries, config,
     plt.xlim((0, roundspan))
     plt.ylim((0, 1))
 
-    colors = ("m", "orange", "b", "g")
-    markers = ("p", "^", "s", "o")
+    colors = ("m", "b", "g", "orange", "k")
+    markers = ("p", "*", "^", "s", "o")
     linewidth = 2
-    linestyle = ("-", ":", "--", "-.")
-    marker_sizes = (8, 7, 6, 7)
-    marker_intervals = (16, 16, 16, 16)
-    marker_starts = (3, 6, 10, 10)
+    linestyle = ("-", ":", "--", "-.", "-")
+    marker_sizes = (8, 9, 7, 6, 7, 7)
+    marker_intervals = (16, 16, 16, 16, 16, 16)
+    marker_starts = (3, 8, 6, 10, 10)
 
     for idx, summary in enumerate(summaries):
         node, worker = config[idx]
@@ -95,7 +95,7 @@ def draw_accuracy_by_round(summaries, config,
                  markevery=list(range(marker_starts[idx], len(round_list), marker_intervals[idx])),
                  c=colors[idx], linewidth=linewidth, linestyle=linestyle[idx])
 
-    plt.legend(["ESync-300:1", "ESync-30:1", "ESync-10:1", "SSGD"], fontsize=fontsize)
+    plt.legend(["ESync-300:1", "ESync-150:1", "ESync-30:1", "ESync-10:1", "SSGD"], fontsize=fontsize)
 
 
 def draw_data_throughput(summaries, fignum=1):
@@ -251,9 +251,10 @@ if __name__ == "__main__":
     esync_summary_1 = load_summary(os.path.join(base_dir, "esync"), summary_name_dict["esync"])
     esync_summary_2 = load_summary(os.path.join(base_dir, "esync-2"), summary_name_dict["esync"])
     esync_summary_3 = load_summary(os.path.join(base_dir, "esync-3"), summary_name_dict["esync"])
+    esync_summary_4 = load_summary(os.path.join(base_dir, "esync-4"), summary_name_dict["esync"])
     sync_summary = load_summary(os.path.join(base_dir, "sync"), summary_name_dict["sync"])
-    summaries = [esync_summary_1, esync_summary_2, esync_summary_3, sync_summary]
-    config = [("cloud3", "gpu1"), ("cloud3", "gpu1"), ("cloud3", "gpu0"), ("cloud3", "gpu1")]
+    summaries = [esync_summary_1, esync_summary_4, esync_summary_2, esync_summary_3, sync_summary]
+    config = [("cloud3", "gpu1"), ("cloud3", "gpu1"), ("cloud3", "gpu1"), ("cloud3", "gpu0"), ("cloud3", "gpu1")]
     draw_accuracy_by_round(summaries, config, roundspan=200, down_sample_interval=2, smooth_interval=5)
 
     plt.show()
