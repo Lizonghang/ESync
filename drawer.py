@@ -19,7 +19,7 @@ def interval_averaging(accuracy_list, interval):
     return smoothed
 
 
-def draw_accuracy(summaries, config, vline=0.9,
+def draw_accuracy(summaries, config, vline=0.9, ymax=1.0,
                   fignum=0, timespan=120, down_sample_interval=10, smooth_interval=10, shift=0):
     plt.figure(fignum)
     iid = config[4]
@@ -28,21 +28,23 @@ def draw_accuracy(summaries, config, vline=0.9,
     plt.xlabel("Time (minutes)", fontsize=fontsize)
     plt.ylabel("Test Accuracy", fontsize=fontsize)
     plt.xlim((0, timespan))
-    plt.ylim((0, 1))
+    plt.ylim((0, ymax))
 
     colors = ("m", "orange", "b", "g")
     markers = ("p", "^", "s", "o")
     linewidth = 2
     linestyle = ("-", ":", "--", "-.")
+    legend_labels = ["ESync", "SSGD", "ASGD", "DC-ASGD"]
+    legend = []
     marker_sizes = (8, 7, 6, 7)
     if iid:
-        marker_intervals = (32, 16, 32, 45)
-        marker_prefix = [[5, 7, 9], [5], [7, 10], [13]]
-        marker_starts = (15, 15, 40, 30)
+        marker_intervals = (160, 16, 240, 200)
+        marker_prefix = [[20], [5], [], []]
+        marker_starts = (50, 15, 80, 150)
     else:
         marker_intervals = (12, 14, 23, 24)
         marker_prefix = [[], [], [], []]
-        marker_starts = (9, 12, 18, 40)
+        marker_starts = (9, 12, 18, 60)
 
     for idx, summary in enumerate(summaries):
         node, worker = config[idx]
@@ -59,9 +61,11 @@ def draw_accuracy(summaries, config, vline=0.9,
                  markevery=marker_prefix[idx]+\
                            list(range(marker_starts[idx], len(elapsed_time_list), marker_intervals[idx])),
                  c=colors[idx], linewidth=linewidth, linestyle=linestyle[idx])
+        legend.append(legend_labels[idx])
+    legend.append("Standalone")
 
     plt.plot((0, timespan), (vline, vline), c="k", linestyle="--", linewidth=1)
-    plt.legend(["ESync", "SSGD", "ASGD", "DC-ASGD", "Standalone"], fontsize=fontsize)
+    plt.legend(legend, fontsize=fontsize)
 
 
 def draw_accuracy_by_round(summaries, config,
@@ -248,13 +252,24 @@ if __name__ == "__main__":
     # config = [("cloud3", "gpu0"), ("cloud3", "gpu0"), ("cloud3", "gpu1"), ("cloud3", "gpu1"), False]
     # draw_accuracy(summaries, config, vline=0.926, fignum=4, down_sample_interval=10, smooth_interval=30)
 
-    esync_summary_1 = load_summary(os.path.join(base_dir, "esync"), summary_name_dict["esync"])
-    esync_summary_2 = load_summary(os.path.join(base_dir, "esync-2"), summary_name_dict["esync"])
-    esync_summary_3 = load_summary(os.path.join(base_dir, "esync-3"), summary_name_dict["esync"])
-    esync_summary_4 = load_summary(os.path.join(base_dir, "esync-4"), summary_name_dict["esync"])
+    # esync_summary_1 = load_summary(os.path.join(base_dir, "esync"), summary_name_dict["esync"])
+    # esync_summary_2 = load_summary(os.path.join(base_dir, "esync-2"), summary_name_dict["esync"])
+    # esync_summary_3 = load_summary(os.path.join(base_dir, "esync-3"), summary_name_dict["esync"])
+    # esync_summary_4 = load_summary(os.path.join(base_dir, "esync-4"), summary_name_dict["esync"])
+    # sync_summary = load_summary(os.path.join(base_dir, "sync"), summary_name_dict["sync"])
+    # summaries = [esync_summary_1, esync_summary_4, esync_summary_2, esync_summary_3, sync_summary]
+    # config = [("cloud3", "gpu1"), ("cloud3", "gpu1"), ("cloud3", "gpu1"), ("cloud3", "gpu0"), ("cloud3", "gpu1")]
+    # draw_accuracy_by_round(summaries, config, roundspan=200, down_sample_interval=2, smooth_interval=5)
+
+    # cifar10
+    esync_summary = load_summary(os.path.join(base_dir, "esync"), summary_name_dict["esync"])
     sync_summary = load_summary(os.path.join(base_dir, "sync"), summary_name_dict["sync"])
-    summaries = [esync_summary_1, esync_summary_4, esync_summary_2, esync_summary_3, sync_summary]
-    config = [("cloud3", "gpu1"), ("cloud3", "gpu1"), ("cloud3", "gpu1"), ("cloud3", "gpu0"), ("cloud3", "gpu1")]
-    draw_accuracy_by_round(summaries, config, roundspan=200, down_sample_interval=2, smooth_interval=5)
+    async_summary = load_summary(os.path.join(base_dir, "async"), summary_name_dict["async"])
+    dcasgd_summary = load_summary(os.path.join(base_dir, "dcasgd"), summary_name_dict["dcasgd"])
+    summaries = [esync_summary, sync_summary, async_summary, dcasgd_summary]
+
+    config = [("cloud3", "gpu0"), ("cloud3", "gpu1"), ("cloud3", "gpu1"), ("cloud3", "gpu1"), True]
+    draw_accuracy(summaries, config, vline=0.8, ymax=0.81,
+                  fignum=0, down_sample_interval=5, smooth_interval=20, timespan=2*24*60)
 
     plt.show()
