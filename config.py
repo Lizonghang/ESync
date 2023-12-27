@@ -4,11 +4,11 @@ NETWORK = "resnet18-v1"
 MODE = "esync"
 USE_DCASGD = 0
 SPLIT_BY_CLASS = 0
-DATA_DIR = "/home/lizh/ESync/data"
+DATA_DIR = "data"
 
 # for evaluation
 EVAL_DURATION = 1
-LOG_DIR = "/home/lizh/ESync/logs"
+LOG_DIR = "logs"
 
 # for optimizer
 LEARNING_RATE = 5e-4
