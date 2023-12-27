@@ -79,10 +79,9 @@ The state server will listen on port 10010 in the background to wait for the que
 Run the following commands on cloud2 (IP: 10.1.1.34) to start the scheduler:
 
 ```
-> cd /path/to/ESync
 > DMLC_ROLE=scheduler DMLC_PS_ROOT_URI=10.1.1.34 DMLC_PS_ROOT_PORT=9091 DMLC_NUM_SERVER=1 \
   DMLC_NUM_WORKER=6 PS_VERBOSE=1 DMLC_INTERFACE=eno2 \
-  nohup python main.py -m esync -c True -ll 0.001 -dcasgd 0 > scheduler.log &
+  nohup python main.py > scheduler.log &
 ```
 
 We start the scheduler on cloud2 and listen on port 9091 to wait for the messages (e.g. register, heartbeat) from workers. We specify the scheduler to use CPU to avoid errors that no GPU resources available, and specify **mode** to *esync* to run ESync algorithm.
@@ -102,7 +101,7 @@ Run the following commands on cloud2 (IP: 10.1.1.34) to start the parameter serv
 ```
 > DMLC_ROLE=server DMLC_PS_ROOT_URI=10.1.1.34 DMLC_PS_ROOT_PORT=9091 DMLC_NUM_SERVER=1 \
   DMLC_NUM_WORKER=6 PS_VERBOSE=1 DMLC_INTERFACE=eno2 \
-  nohup python main.py -m esync -c True -ll 0.001 -dcasgd 0 > server.log &
+  nohup python main.py > server.log &
 ```
 
 The parameter server will create a TCP connection to the scheduler and complete registration automatically by specifying **DMLC\_PS\_ROOT\_URI** and **DMLC\_PS\_ROOT\_PORT** (the same as workers). The aggregation operations will be performed on GPU if **cpu** is set to *False*.
